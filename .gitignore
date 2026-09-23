@@ -29,6 +29,10 @@ _fix_*.txt
 _final_*.txt
 _analyze*.json
 _boundary_*.json
+*.tmp
+*.bak
+*.orig
+*.prof
 
 # ── 页面自动化（Playwright / Streamlit）─────────────────
 .playwright-mcp/

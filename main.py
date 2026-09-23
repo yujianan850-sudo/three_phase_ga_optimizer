@@ -333,10 +333,10 @@ def build_parser() -> argparse.ArgumentParser:
     ga_run.add_argument("--guided-mutation-rate", type=float, default=0.65)
     ga_run.add_argument("--injection-mode", choices=("empirical_preferred", "raw_only"), default="empirical_preferred",
                         help="经验有效域优先，或强制从原始页面搜索域注入")
-    ga_run.add_argument("--guided-mutation-mode", choices=("single_primary", "random_only"), default="single_primary",
-                        help="单主导约束局部探测，或强制全部普通随机变异")
+    ga_run.add_argument("--guided-mutation-mode", choices=("single_primary", "random_only"), default="random_only",
+                        help="单主导约束局部探测，或强制全部普通随机变异；默认普通随机变异")
     ga_run.add_argument("--experiment-strategy", choices=EXPERIMENT_STRATEGIES, default=None,
-                        help="按与页面/ga-ablation 相同的命名策略覆盖三项算子开关；不等同于历史旧版 GA")
+                        help="按与页面/ga-ablation 相同的命名策略覆盖三项算子开关；默认使用当前推荐参数（耦合交叉 + 经验有效域注入 + 普通随机变异），不等同于历史旧版 GA")
     ga_run.add_argument("--evaluation-budget", type=int, default=None,
                         help="真实精算调用的硬上限；达到后立即停止本次运行")
     ga_run.add_argument("--evolution-evaluation-budget", type=int, default=None,

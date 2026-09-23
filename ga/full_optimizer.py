@@ -51,8 +51,9 @@ class GASettings:
     random_injection_ratio: float = 0.10
     # 消融时可以强制关闭经验有效域注入，而不是依赖“经验池不足”这一运行时回退。
     injection_mode: str = "empirical_preferred"  # empirical_preferred / raw_only
-    # 消融时可以强制关闭诊断反馈，所有变异都走普通随机合法变异。
-    guided_mutation_mode: str = "single_primary"  # single_primary / random_only
+    # 配置 401 的 v9 配对实验中，诊断反馈在经验有效域注入之上未检出额外收益；
+    # 日常默认保留普通随机变异。single_primary 仍作为可复核的可选实验策略保留。
+    guided_mutation_mode: str = "random_only"  # single_primary / random_only
     # None 表示不限制。非空时是本次运行内真实调用精算器的硬上限，缓存命中不计入。
     evaluation_budget: int | None = None
     # 第 0 代覆盖是策略无关的公共成本；该字段专门限制第 0 代结束后的真实精算调用，

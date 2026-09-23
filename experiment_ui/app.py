@@ -2156,13 +2156,14 @@ def render_full_ga(
                 "当前页面参数": None,
                 "消融基线：关闭三项改进": "baseline",
                 "仅启用结构电磁耦合交叉": "coupled",
-                "耦合交叉 + 经验有效域注入": "empirical_injection",
+                "当前推荐：耦合交叉 + 经验有效域注入": "empirical_injection",
                 "完整诊断反馈策略": "guided_mutation",
             }
             strategy_label = st.selectbox(
                 "本次实验策略",
                 tuple(strategy_options),
-                help="命名策略与 CLI 的 ga-run --experiment-strategy、ga-ablation 完全共用同一开关映射；它们是当前代码内的消融层级，不是历史旧版 GA。",
+                index=list(strategy_options).index("当前推荐：耦合交叉 + 经验有效域注入"),
+                help="默认推荐仅来自配置 401、当前搜索域、B′=8000、10 个配对种子的 v9 对照：经验有效域注入显著有利；诊断反馈未检出额外收益。命名策略与 CLI 的 ga-run --experiment-strategy、ga-ablation 完全共用同一开关映射；它们是当前代码内的消融层级，不是历史旧版 GA。",
                 key="ga-experiment-strategy",
             )
             selected_strategy = strategy_options[strategy_label]
@@ -2183,7 +2184,7 @@ def render_full_ga(
                 coupled_crossover_rate = st.slider("结构电磁耦合交叉占比", 0.0, 1.0, 0.75, 0.05, key="ga-coupled-crossover", help="在发生交叉时，铁芯/硅钢牌号/低压匝数/高低压绕组整体继承同一父代的比例；其余比例保留四块探索重组，以避免过早锁死。")
                 mutation_rate = st.slider("总变异率", 0.0, 1.0, 0.45, 0.05, key="ga-mutation", help="子代发生变异的概率。未发生变异时，子代只来自父代复制或块级交叉。")
             with advanced_b:
-                guided_rate = st.slider("诊断反馈变异占比", 0.0, 1.0, 0.65, 0.05, key="ga-guided", help="在已决定变异的子代中，按“主导超限约束 → 一个优先模块 → 相邻离散方案精算”的比例；其余为普通合法随机变异。")
+                guided_rate = st.slider("诊断反馈变异占比（仅完整诊断策略生效）", 0.0, 1.0, 0.65, 0.05, key="ga-guided", help="仅当选择“完整诊断反馈策略”时生效：在已决定变异的子代中，按“主导超限约束 → 一个优先模块 → 相邻离散方案精算”的比例；其余为普通合法随机变异。默认推荐策略不启用该探测。")
                 probe_limit = st.number_input("每次诊断的局部精算数", min_value=1, max_value=10, value=3, step=1, key="ga-probe", help="定向变异时，只围绕一个主导约束和一个模块，最多精算多少个相邻离散候选；实际增减方向由精算结果确认。")
         with retention_tab:
             retention_a, retention_b = st.columns(2)
