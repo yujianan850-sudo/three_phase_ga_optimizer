@@ -2164,7 +2164,7 @@ def render_full_ga(
                 tuple(strategy_options),
                 index=list(strategy_options).index("当前推荐：耦合交叉 + 经验有效域注入"),
                 help="默认推荐仅来自配置 401、当前搜索域、B′=8000、10 个配对种子的 v9 对照：经验有效域注入显著有利；诊断反馈未检出额外收益。命名策略与 CLI 的 ga-run --experiment-strategy、ga-ablation 完全共用同一开关映射；它们是当前代码内的消融层级，不是历史旧版 GA。",
-                key="ga-experiment-strategy",
+                key="ga-experiment-strategy-v9-default",
             )
             selected_strategy = strategy_options[strategy_label]
             if selected_strategy is not None:

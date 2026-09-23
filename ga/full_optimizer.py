@@ -104,8 +104,9 @@ EXPERIMENT_STRATEGIES = (
 def apply_experiment_strategy(settings: GASettings, strategy: str | None) -> GASettings:
     """按唯一规则应用页面与 CLI 共用的四步消融策略。
 
-    ``None`` 表示普通运行，完全使用调用方提供的页面/CLI 参数；四个命名策略仅
-    开关耦合交叉、经验有效域注入和诊断反馈三项，不回退任何历史版本代码。
+    ``None`` 表示普通运行，完全使用调用方提供的页面/CLI 参数。命名策略必须固定
+    自己定义的耦合率、注入模式和诊断反馈参数，不能继承页面滑条或 CLI 的残留值；
+    否则同名策略会出现同名不同义，无法用于配对消融。它们不回退任何历史版本代码。
     """
     if strategy is None:
         return settings
@@ -113,11 +114,15 @@ def apply_experiment_strategy(settings: GASettings, strategy: str | None) -> GAS
         return replace(settings, coupled_electromagnetic_crossover_rate=0.0,
                        injection_mode="raw_only", guided_mutation_mode="random_only")
     if strategy == "coupled":
-        return replace(settings, injection_mode="raw_only", guided_mutation_mode="random_only")
+        return replace(settings, coupled_electromagnetic_crossover_rate=0.75,
+                       injection_mode="raw_only", guided_mutation_mode="random_only")
     if strategy == "empirical_injection":
-        return replace(settings, injection_mode="empirical_preferred", guided_mutation_mode="random_only")
+        return replace(settings, coupled_electromagnetic_crossover_rate=0.75,
+                       injection_mode="empirical_preferred", guided_mutation_mode="random_only")
     if strategy == "guided_mutation":
-        return replace(settings, injection_mode="empirical_preferred", guided_mutation_mode="single_primary")
+        return replace(settings, coupled_electromagnetic_crossover_rate=0.75,
+                       injection_mode="empirical_preferred", guided_mutation_mode="single_primary",
+                       guided_mutation_rate=0.65)
     raise ValueError(f"未知实验策略: {strategy}")
 
 
