@@ -1,0 +1,11 @@
+[theme]
+# 强制使用浅色主题，避免浏览器/系统深色偏好令原生 Streamlit 控件出现白字深底。
+base = "light"
+primaryColor = "#0F766E"
+backgroundColor = "#F6F8FB"
+secondaryBackgroundColor = "#FFFFFF"
+textColor = "#102A43"
+font = "sans serif"
+
+[client]
+toolbarMode = "viewer"

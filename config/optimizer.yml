@@ -1,0 +1,8 @@
+# 数据库连接信息仅由 config/database.local.yml 提供；Python 不再读取 Java 的配置文件。
+
+run:
+  output_dir: outputs
+  # 仅保存 GA 运行策略默认值；产品工艺范围必须读取 Java 页面配置。
+  history_seed_ratio: 0.35
+  # 每代在精英保留后，尝试注入的“从未出现过的合法完整候选”比例。
+  random_injection_ratio: 0.10

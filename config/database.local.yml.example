@@ -1,0 +1,9 @@
+# 复制为 database.local.yml 后填写本机只读 faladi 数据库连接；不要提交真实口令。
+database:
+  host: 127.0.0.1
+  port: 3306
+  schema: faladi
+  username: your_username
+  password: your_password
+  charset: utf8mb4
+  connect_timeout_seconds: 5

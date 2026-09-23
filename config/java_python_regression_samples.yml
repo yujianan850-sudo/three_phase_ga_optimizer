@@ -1,0 +1,28 @@
+# 由“新 Java 代码”实际精算并保存后，把六个 record_id 固定在这里。
+# Python 会逐字段比较 calculationSnapshotVersion=1 的 Java 保存结果；空值只表示样本尚未生成，
+# 绝不表示通过。不要拿旧历史记录填充：旧记录没有同次完整快照。
+samples:
+  - name: round_corrugated
+    core_type: 0
+    tank_type: 0
+    record_id: 28929
+  - name: long_oval_corrugated
+    core_type: 1
+    tank_type: 0
+    record_id: 28927
+  - name: ellipse_corrugated
+    core_type: 2
+    tank_type: 0
+    record_id: null
+  - name: round_radiator
+    core_type: 0
+    tank_type: 1
+    record_id: 28932
+  - name: long_oval_radiator
+    core_type: 1
+    tank_type: 1
+    record_id: 28931
+  - name: ellipse_radiator
+    core_type: 2
+    tank_type: 1
+    record_id: null

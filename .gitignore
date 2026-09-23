@@ -1,0 +1,56 @@
+# ── Python ──────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# 虚拟环境
+.venv/
+venv/
+ENV/
+
+# ── 实验产物（体积大，仅本地保留）───────────────────────
+outputs/
+测试归档/
+输出/
+*.sqlite3
+*.sqlite3-journal
+*.sqlite3-wal
+*.sqlite3-shm
+
+# ── 临时脚本与探针的落盘产物 ────────────────────────────
+_s*.txt
+_fix_*.txt
+_final_*.txt
+_analyze*.json
+_boundary_*.json
+
+# ── 页面自动化（Playwright / Streamlit）─────────────────
+.playwright-mcp/
+.playwright/
+playwright-report/
+test-results/
+*.log
+
+# ── 本地配置与密钥 ──────────────────────────────────────
+config/database.local.yml
+.streamlit/secrets.toml
+.env
+.env.*
+!.env.example
+
+# ── IDE / 编辑器 ────────────────────────────────────────
+.idea/
+.vscode/
+*.iml
+*.swp
+*.swo
+
+# ── 操作系统 ────────────────────────────────────────────
+.DS_Store
+Thumbs.db
