@@ -207,13 +207,32 @@ class GeneDomain:
         )
 
     @staticmethod
-    def _page_duct_options(craft: dict[str, Any], side: str) -> tuple[OilDuctScheme, ...]:
+    def _normalize_multi_select(value: Any) -> Any:
+        """把 Java 兼容的历史单值还原成单元素列表。
+
+        Java 的三相线圈实体把 ``channelCount`` / ``channelType`` 声明为 ``List<Integer>``，
+        并挂了 ``IntOrListDeserializer``，即**同时接受历史标量 int 与多选数组**
+        （见 ``ThreePhaseCraftLowCoil.java:26`` / ``ThreePhaseCraftHighCoil.java:26``）。
+        数据库里这两种形态并存，Python 侧必须做同样的归一化，否则会把大量真实配置
+        误判为“页面油道数量/类型不能为空”。非数值类型（字符串、None）原样返回，
+        交给调用方按缺失处理。
+        """
+        if isinstance(value, bool):
+            return value
+        if isinstance(value, (int, float)):
+            return [int(value)]
+        return value
+
+    @classmethod
+    def _page_duct_options(cls, craft: dict[str, Any], side: str) -> tuple[OilDuctScheme, ...]:
         """复刻 Java ``deduplicateChannelPairs``：页面数量×类型，多选笛卡尔积后归一化。
 
         count=0 或 type=0 都表示同一个 ``(0, 0)`` 无油道方案。页面必须提供这两个
-        数组；缺失时不以 Python 固定列表或历史方案代替。
+        数组（或 Java 兼容的历史单值）；两者都缺失时不以 Python 固定列表或历史
+        方案代替。
         """
-        counts, types = craft.get("channelCount"), craft.get("channelType")
+        counts = cls._normalize_multi_select(craft.get("channelCount"))
+        types = cls._normalize_multi_select(craft.get("channelType"))
         if not isinstance(counts, list) or not isinstance(types, list) or not counts or not types:
             raise ValueError(f"{side}侧页面油道数量/类型不能为空")
         result: list[OilDuctScheme] = []

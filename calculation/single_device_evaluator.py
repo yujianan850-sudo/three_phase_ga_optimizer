@@ -55,6 +55,15 @@ class CoreStage:
     conversion_c: Decimal
 
 
+class CandidateRejected(ValueError):
+    """候选在本配置下**不可用**，不是公式链缺失，也不是程序缺陷。
+
+    Java 主循环对这类情况一律 ``continue``（跳过该工作项，不进候选列表），
+    因此 Python 侧必须把「候选被拒」与「首段精算失败」区分开：
+    前者是正常的域内筛选结果，后者才代表迁移缺口或数据缺失。
+    """
+
+
 @dataclass(frozen=True)
 class WindingStage:
     """一个绕组由候选线规和层数直接推导的基础几何、电气量。
@@ -142,7 +151,13 @@ class ThreePhaseSingleDeviceEvaluator:
         elif winding == "Dd":
             lp, plvn, hp, phvn = p, lvn, p, hvn
         elif winding == "Ddyyn11":
-            lp, plvn, hp, phvn = java_divide(p, TWO, 99), java_divide(lvn, SQRT3, 2), java_divide(p, TWO, 99), hvn
+            # Java: LP = P.divide(BD_2); HP = P.divide(BD_2); —— 不带 scale、不带
+            # rounding，是精确除法（6500/2 整除，不会抛 ArithmeticException）。
+            # 此处**不能**写成 java_divide(p, TWO, 99)：quantize 到 99 位小数需要
+            # 103 位有效数字，而 decimal 默认上下文只有 28 位，必然抛
+            # InvalidOperation，导致整个 Ddyyn11 配置 0% 可计算。
+            lp, hp = p / TWO, p / TWO
+            plvn, phvn = java_divide(lvn, SQRT3, 2), hvn
         else:
             raise ValueError(f"不支持的接线方式: {winding}")
         plvc = java_divide(lp * D(1000), THREE * plvn, 1)
@@ -320,7 +335,9 @@ class ThreePhaseSingleDeviceEvaluator:
         values_n = (0, 1, 2, 3, 4, 3, 4, 4, 5, 5)
         values_m = (0, 0, 0, 0, 0, 2, 2, 3, 3, 4)
         if not 0 <= paper_count < len(values_n):
-            raise ValueError(f"高压层间纸档位超出 Java 公式表: {paper_count}")
+            raise CandidateRejected(
+                f"高压层间纸档位 {paper_count} 已达 Java 表上限 {len(values_n)}，该高压层数候选不可用"
+            )
         return (D(values_n[paper_count]) + D(values_m[paper_count]) * D("0.5")) * D("0.08")
 
     def _low_voltage_stage(self, candidate: ThreePhaseDesignCandidate) -> WindingStage:
@@ -442,7 +459,11 @@ class ThreePhaseSingleDeviceEvaluator:
             high_yoke = D(isolation["highVoltageToYokeDistance"])
             low_yoke = self._shift_yoke_distance(lv_base, D(isolation["lowVoltageToYokeDistance"]), window_height)
         if high_yoke is None or low_yoke is None:
-            raise ValueError("绕组高度无法在 Java 规定的轭距 ±5 范围内对齐")
+            # Java: ThreePhaseSchemeRecordServiceImpl:1335-1337
+            #   BigDecimal[] calculationResult = findCrgoaAndYdd(...);
+            #   if (calculationResult == null) { continue; }
+            # 两侧轭距在 ±5 内无法对齐时 Java 直接跳过该工作项。
+            raise CandidateRejected("绕组高度无法在 Java 规定的轭距 ±5 范围内对齐，该候选不可用")
 
         _, lv_segments = self._layer_distribution(
             lv.layer_count, candidate.low_voltage_turns, candidate.low_voltage_duct.count,
@@ -1430,6 +1451,13 @@ class ThreePhaseSingleDeviceEvaluator:
                     "已完成圆形、长圆和椭圆铁芯的 PK、UK，以及波纹油箱/散热器油箱的温升、重量和成本公式迁移。",
                     "本次结果为严格合格/不合格判定的公式结果；新增热工、重量、成本字段仍待用同次 Java 结果逐项验证。",
                 ],
+            )
+        except CandidateRejected as exc:
+            # Java 主循环对这类候选一律 continue：它在本配置下**不可用**，
+            # 既不是迁移缺口也不是数据缺失，因此不得与“首段精算失败”混淆。
+            return EvaluationResult(
+                complete=False, calculable=False, feasible=False,
+                diagnostic=[f"候选被域规则拒绝: {exc}"],
             )
         except (ArithmeticError, KeyError, ValueError, NotImplementedError) as exc:
             return EvaluationResult(
