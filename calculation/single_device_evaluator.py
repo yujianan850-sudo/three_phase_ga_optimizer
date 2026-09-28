@@ -253,7 +253,15 @@ class ThreePhaseSingleDeviceEvaluator:
         lower = by_flux.get(lower_flux)
         upper = by_flux.get(lower_flux + D("0.01"))
         if lower is None or upper is None:
-            raise ValueError(f"硅钢片 {brand} 缺少磁密 {lower_flux} / {lower_flux + D('0.01')} 的损耗数据")
+            # Java: ThreePhaseSchemeRecordServiceImpl:1240-1244
+            #   BigDecimal bj5 = CT.setScale(2, RoundingMode.DOWN);
+            #   if (brandConfigs.get(bj5) == null) { continue; }
+            #   if (brandConfigs.get(bj5.add(BD_0_01)) == null) { continue; }
+            # 磁密档案缺表点时 Java 跳过该工作项，属"候选不可用"，
+            # 不是公式链缺失，也不得与"首段精算失败"混淆（见 CandidateRejected）。
+            raise CandidateRejected(
+                f"硅钢片 {brand} 缺少磁密 {lower_flux} / {lower_flux + D('0.01')} 的损耗数据"
+            )
         weight = (flux * D(10) - scale(flux * D(10), 1, ROUND_FLOOR)) * D(10)
         hz_factor = ONE if self._frequency_hz() == D(50) else D("1.33")
         return scale((D(lower["specific_loss"]) + (D(upper["specific_loss"]) - D(lower["specific_loss"])) * weight) * hz_factor, 5)

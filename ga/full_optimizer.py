@@ -54,6 +54,10 @@ class GASettings:
     # 配置 401 的 v9 配对实验中，诊断反馈在经验有效域注入之上未检出额外收益；
     # 日常默认保留普通随机变异。single_primary 仍作为可复核的可选实验策略保留。
     guided_mutation_mode: str = "random_only"  # single_primary / random_only
+    # 论文把 BGA（目录约束基础遗传算法）定义为：保留完整目录记录与 Φ 合法化，
+    # 但关闭独立近可行档案。True 是本文 MGA 的双档案；False 即 BGA 的单档案口径。
+    # 主比较必须显式声明该开关，不能靠"是否命中近可行档案"隐式区分。
+    use_near_archive: bool = True
     # None 表示不限制。非空时是本次运行内真实调用精算器的硬上限，缓存命中不计入。
     evaluation_budget: int | None = None
     # 第 0 代覆盖是策略无关的公共成本；该字段专门限制第 0 代结束后的真实精算调用，
@@ -98,6 +102,7 @@ EXPERIMENT_STRATEGIES = (
     "coupled",
     "empirical_injection",
     "guided_mutation",
+    "mga_single_archive",
 )
 
 
@@ -111,8 +116,12 @@ def apply_experiment_strategy(settings: GASettings, strategy: str | None) -> GAS
     if strategy is None:
         return settings
     if strategy == "baseline":
+        # 论文对 BGA 的定义：保留目录合法化与 Φ，仅关闭独立近可行档案、
+        # 运行内已评价候选池优先注入和诊断反馈探测。三项开关必须同时生效，
+        # 否则同名策略会出现同名不同义的对照口径。
         return replace(settings, coupled_electromagnetic_crossover_rate=0.0,
-                       injection_mode="raw_only", guided_mutation_mode="random_only")
+                       injection_mode="raw_only", guided_mutation_mode="random_only",
+                       use_near_archive=False)
     if strategy == "coupled":
         return replace(settings, coupled_electromagnetic_crossover_rate=0.75,
                        injection_mode="raw_only", guided_mutation_mode="random_only")
@@ -123,6 +132,13 @@ def apply_experiment_strategy(settings: GASettings, strategy: str | None) -> GAS
         return replace(settings, coupled_electromagnetic_crossover_rate=0.75,
                        injection_mode="empirical_preferred", guided_mutation_mode="single_primary",
                        guided_mutation_rate=0.65)
+    if strategy == "mga_single_archive":
+        # 论文表 6 的「MGA-单档案」对照：保留本文 MGA 的全部算子
+        # （耦合交叉 + 经验有效域注入 + 诊断反馈），只关闭独立近可行档案。
+        # 它与 baseline 的区别正是可归因于"双档案"这一模块。
+        return replace(settings, coupled_electromagnetic_crossover_rate=0.75,
+                       injection_mode="empirical_preferred", guided_mutation_mode="single_primary",
+                       guided_mutation_rate=0.65, use_near_archive=False)
     raise ValueError(f"未知实验策略: {strategy}")
 
 
@@ -155,11 +171,16 @@ class ArchiveDecision:
 
 @dataclass
 class DualArchive:
-    """严格合格档案按成本排序，近可行档案按约束超限向量排序。"""
+    """严格合格档案按成本排序，近可行档案按约束超限向量排序。
+
+    ``use_near=False`` 时只维护严格档案，即论文定义的 BGA（目录约束基础遗传算法）：
+    它保留完整目录记录与 Φ 合法化，但关闭独立近可行档案。
+    """
 
     strict: list[Individual]
     near: list[Individual]
     limit: int
+    use_near: bool = True
 
     @staticmethod
     def _candidate_key(individual: Individual) -> str:
@@ -230,9 +251,12 @@ class DualArchive:
         participants = list(participants_by_id.values())
 
         strict_items = [item for item in participants if item.result.feasible and item.result.complete]
+        # 关闭近可行档案时（BGA）不收集 near 参与者。这样未严格可行的个体
+        # 会自然落入下面的 "neither" 分支，轨迹里不会再出现 near_retained。
         near_items = [
             item for item in participants
-            if item.result.calculable and item.result.complete and not item.result.feasible
+            if self.use_near and item.result.calculable and item.result.complete
+            and not item.result.feasible
         ]
         strict_winners, strict_duplicate_losers, strict_equivalent_losers = self._representatives(
             strict_items, self.strict_key,
@@ -369,7 +393,7 @@ class ThreePhaseGeneticOptimizer:
         self.trace = trace
         self.run_id = run_id
         self.cache = EvaluationCache(precomputed_results)
-        self.archive = DualArchive([], [], settings.archive_size)
+        self.archive = DualArchive([], [], settings.archive_size, use_near=settings.use_near_archive)
         self._core_by_id = {int(row["id"]): row for row in domain.cores}
         self._seen_candidate_keys: set[str] = set()
         # 只保留已被真实精算证明“可完成计算”的候选。每代随机注入优先从这个
