@@ -1,0 +1,197 @@
+# -*- coding: utf-8 -*-
+"""V6.13：送外审图表重绘与证据边界终校；不修改实验数据。"""
+from pathlib import Path
+import json
+
+import matplotlib.pyplot as plt
+import numpy as np
+from matplotlib.patches import FancyArrowPatch, FancyBboxPatch
+from docx import Document
+from docx.oxml import OxmlElement
+from docx.oxml.ns import qn
+from docx.shared import Pt
+
+ROOT = Path(r"D:\IdeaProject\faladi\three_phase_ga_optimizer")
+SOURCE = ROOT / "论文" / "目录约束双档案遗传优化三相变压器_版式与引用优化版V6.11-送外审正文对齐终校版.docx"
+OUTPUT = ROOT / "论文" / "目录约束双档案遗传优化三相变压器_版式与引用优化版V6.13-送外审图表与证据边界终校版.docx"
+ASSET = ROOT / "论文" / "图表-送外审终校V6.13"
+DATA = ROOT / "测试归档" / "2026-09-24测试" / "论文真实数据"
+
+INK, BLUE, TEAL, ORANGE, GRID = "#19324D", "#2E5F89", "#167C74", "#BE7A2F", "#D9E3EC"
+PALE_BLUE, PALE_TEAL, PALE_ORANGE = "#F4F8FC", "#EEF8F6", "#FFF7EE"
+plt.rcParams.update({"font.sans-serif": ["Microsoft YaHei", "SimHei", "Arial Unicode MS"], "axes.unicode_minus": False})
+
+
+def save(fig, path):
+    fig.savefig(path, dpi=600, bbox_inches="tight", facecolor="white")
+    plt.close(fig)
+
+
+def arrow(ax, a, b, color=BLUE, lw=1.8, rad=0):
+    ax.add_patch(FancyArrowPatch(a, b, arrowstyle="-|>", mutation_scale=12,
+                                 linewidth=lw, color=color, connectionstyle=f"arc3,rad={rad}"))
+
+
+def box(ax, x, y, w, h, title, note="", fill=PALE_BLUE, edge=BLUE, ts=13, ns=10):
+    ax.add_patch(FancyBboxPatch((x,y), w,h, boxstyle="round,pad=0.02,rounding_size=0.035",
+                                facecolor=fill, edgecolor=edge, linewidth=1.55))
+    ax.text(x+w/2,y+h*.61,title,ha="center",va="center",fontsize=ts,fontweight="bold",color=INK)
+    if note: ax.text(x+w/2,y+h*.28,note,ha="center",va="center",fontsize=ns,color="#4D6278")
+
+
+def fig1(path):
+    fig,ax=plt.subplots(figsize=(6.2,2.55)); ax.set_xlim(0,12); ax.set_ylim(0,5); ax.axis("off")
+    box(ax,.25,3.25,2.55,.95,"页面配置 q","",PALE_BLUE,BLUE,16,9.5)
+    box(ax,3.45,3.25,2.55,.95,"冻结目录 D","",PALE_BLUE,BLUE,16,9.5)
+    box(ax,6.65,3.25,2.55,.95,"合法化 Φ","",PALE_TEAL,TEAL,16,9.5)
+    box(ax,9.85,3.25,1.90,.95,"精算 E","",PALE_ORANGE,ORANGE,16,9.5)
+    for x1,x2 in ((2.8,3.45),(6.0,6.65),(9.2,9.85)): arrow(ax,(x1,3.73),(x2,3.73))
+    box(ax,3.25,1.02,2.60,.95,"约束诊断 V","",PALE_ORANGE,ORANGE,16,9.5)
+    box(ax,6.35,1.02,2.60,.95,"双档案","",PALE_TEAL,TEAL,16,9.5)
+    box(ax,9.45,1.02,2.30,.95,"搜索更新","",PALE_BLUE,BLUE,16,9.2)
+    arrow(ax,(10.8,3.25),(10.8,1.97),ORANGE); arrow(ax,(5.85,1.5),(6.35,1.5),TEAL); arrow(ax,(8.95,1.5),(9.45,1.5)); arrow(ax,(9.45,1.02),(8.0,.28),TEAL,rad=.1); arrow(ax,(8.0,.28),(6.65,3.25),TEAL,rad=.18)
+    fig.tight_layout(pad=.15); save(fig,path)
+
+
+def fig2(path):
+    fig,ax=plt.subplots(figsize=(6.2,3.45)); ax.set_xlim(0,12); ax.set_ylim(0,7); ax.axis("off")
+    box(ax,.35,4.5,3.0,1.45,"记录 A\n完整字段","",PALE_BLUE,BLUE,16,10)
+    box(ax,8.65,4.5,3.0,1.45,"记录 B\n完整字段","",PALE_BLUE,BLUE,16,10)
+    box(ax,4.18,4.5,3.65,1.45,"字段拼接\n禁止", "", "#FFF5F4", "#C94343",16,10)
+    ax.text(6,3.58,"不可还原",ha="center",va="center",fontsize=14,fontweight="bold",color="#C94343")
+    arrow(ax,(3.35,5.2),(4.18,5.2),"#C94343"); arrow(ax,(8.65,5.2),(7.83,5.2),"#C94343")
+    box(ax,1.05,.85,3.35,1.42,"整体继承\n记录 A 或 B","",PALE_TEAL,TEAL,16,10)
+    box(ax,4.85,.85,2.15,1.42,"合法化 Φ","",PALE_TEAL,TEAL,15,9.4)
+    box(ax,7.45,.85,3.35,1.42,"工程精算 E\n可还原、可解释","",PALE_TEAL,TEAL,16,10)
+    arrow(ax,(4.4,1.56),(4.85,1.56),TEAL); arrow(ax,(7.0,1.56),(7.45,1.56),TEAL)
+    fig.tight_layout(pad=.12); save(fig,path)
+
+
+def fig3(path):
+    fig,ax=plt.subplots(figsize=(6.5,3.9)); ax.set_xlim(0,12); ax.set_ylim(0,7); ax.axis("off")
+    box(ax,.35,5.25,3.10,.95,"工程精算候选","",PALE_BLUE,BLUE,16,10)
+    box(ax,4.25,5.25,3.10,.95,"严格档案 A_f\nV=0","",PALE_TEAL,TEAL,15.2,10)
+    box(ax,4.25,3.35,3.10,.95,"近可行档案 A_n\nV>0","",PALE_ORANGE,ORANGE,15.2,10)
+    box(ax,8.25,4.30,3.20,.95,"父代选择","",PALE_BLUE,BLUE,16,9.8)
+    box(ax,8.25,1.85,3.20,.95,"生成候选","",PALE_BLUE,BLUE,16,10)
+    box(ax,4.25,.35,3.10,.90,"更新与保留","",PALE_TEAL,TEAL,16,9.5)
+    arrow(ax,(3.45,5.73),(4.25,5.73)); arrow(ax,(3.45,5.40),(4.25,3.82)); arrow(ax,(7.35,5.73),(8.25,4.78)); arrow(ax,(7.35,3.82),(8.25,4.78),ORANGE,rad=-.12); arrow(ax,(9.85,4.3),(9.85,2.8)); arrow(ax,(8.25,2.31),(7.35,.8),TEAL,rad=.12); arrow(ax,(4.25,.8),(1.9,.8),TEAL); arrow(ax,(1.9,.8),(1.9,5.25),TEAL)
+    fig.tight_layout(pad=.14); save(fig,path)
+
+
+def fig4(path):
+    scenes=["A","B","C","D","E"]
+    bga=[16.7,60,100,40,3.3]; mga=[20,80,100,100,100]
+    bga_n=["5/30","18/30","30/30","12/30","1/30"]; mga_n=["6/30","24/30","30/30","30/30","30/30"]
+    bga_c=[2754.5,7066.5,10000,8000,8000]; mga_c=[663,2220.5,2074,3580.5,4314]
+    fig,(a,b)=plt.subplots(1,2,figsize=(6.35,2.48),gridspec_kw={"wspace":.46}); x=np.arange(5); w=.33
+    for ax,l,r,ylabel,ymax in ((a,bga,mga,"严格可行率（%）",108),(b,bga_c,mga_c,"调用中位数（次）",10800)):
+        ax.bar(x-w/2,l,w,color="#AAB9C7",label="BGA"); ax.bar(x+w/2,r,w,color=TEAL,label="MGA")
+        ax.set_xticks(x,scenes,fontsize=13); ax.set_ylim(0,ymax); ax.set_ylabel(ylabel,fontsize=12.5); ax.tick_params(axis="y",labelsize=10.5)
+        ax.grid(axis="y",color=GRID,lw=.6); ax.spines[["top","right"]].set_visible(False)
+    # 运行次数已在表 6 报告；图中只保留可读的主指标，避免柱顶数字在单栏中重叠。
+    a.legend(frameon=False,fontsize=9.5,ncol=2,loc="upper left"); b.legend(frameon=False,fontsize=9.5,ncol=2,loc="upper right")
+    a.set_title("（a）严格可行发现率",loc="left",fontsize=11.5,fontweight="bold",color=INK); b.set_title("（b）后续精算调用（描述性）",loc="left",fontsize=11.5,fontweight="bold",color=INK)
+    fig.tight_layout(pad=.28); save(fig,path)
+
+
+def fig5(path):
+    rows=[("场景 B",14,0,-2.83,1.27,"0.00%","Holm p=0.5176"),("场景 C",30,-.83,-1.03,-.83,"-0.83%","Holm p=3.84e-5"),("场景 D",12,-7.02,-11.96,-3.75,"-7.02%","Holm p=9.77e-4")]
+    fig,ax=plt.subplots(figsize=(6.35,3.75)); ax.axvline(0,color="#9BAEC1",lw=1.2); ys=[2,1,0]
+    for y,(name,n,est,lo,hi,lbl,pval) in zip(ys,rows):
+        ax.hlines(y,lo,hi,color=TEAL,lw=3); ax.vlines([lo,hi],y-.07,y+.07,color=TEAL,lw=2); ax.scatter(est,y,s=54,color="#0D5C78",zorder=3)
+        ax.text(-12.65,y+.08,name,ha="left",fontsize=16,fontweight="bold",color=INK); ax.text(-12.65,y-.20,f"共同严格成功 n={n}",ha="left",fontsize=12.3,color="#607388")
+        ax.text(est+.25,y+.12,lbl,fontsize=14,fontweight="bold",color=INK); ax.text(est+.25,y-.17,pval,fontsize=11.5,color="#536578")
+    ax.set_xlim(-13,2); ax.set_ylim(-.5,2.75); ax.set_yticks([]); ax.set_xticks([-12,-9,-6,-3,0]); ax.tick_params(axis="x",labelsize=13)
+    ax.set_xlabel("Hodges–Lehmann 成本变化率（%）",fontsize=15); ax.text(-12.85,2.53,"负值表示 MGA 成本较低；点为 HL 估计，横线为 95% CI。",fontsize=11.5,color="#586B7E")
+    ax.spines[["top","right","left"]].set_visible(False); ax.grid(axis="x",color=GRID,lw=.6); fig.tight_layout(pad=.3); save(fig,path)
+
+
+def fig6(path):
+    labels=["基础\nBGA","双档案+\n耦合交叉","候选池\n注入","诊断\n探测","去双档案\n（扩展）"]
+    data={"A":[16.7,20,20,43.3,63.3],"B":[60,63.3,80,96.7,70],"D":[40,100,100,100,100]}; colors={"A":ORANGE,"B":BLUE,"D":TEAL}; marks={"A":"o","B":"s","D":"^"}
+    fig,ax=plt.subplots(figsize=(6.35,2.65)); x=np.arange(5)
+    for name,vals in data.items(): ax.scatter(x,vals,s=60,marker=marks[name],color=colors[name],label=f"场景 {name}",zorder=3)
+    ax.set_xticks(x,labels,fontsize=12); ax.set_ylim(-4,112); ax.set_yticks([0,50,100]); ax.set_ylabel("严格可行率（%）",fontsize=14); ax.tick_params(axis="y",labelsize=12)
+    ax.grid(axis="y",color=GRID,lw=.65); ax.spines[["top","right"]].set_visible(False); ax.legend(frameon=False,fontsize=12,ncol=3,loc="upper left")
+    ax.text(.01,.03,"点之间不连线：各列为独立预定义策略变体。",transform=ax.transAxes,fontsize=10.4,color="#5B6B7C")
+    fig.tight_layout(pad=.28); save(fig,path)
+
+
+def fig7(path):
+    first=json.loads((DATA/"03_主比较_BGA_MGA"/"diversity_failure_summary.json").read_text(encoding="utf-8")); second=json.loads((DATA/"03_主比较_BGA_MGA"/"diversity_failure_runs_t2rad_runs_t2r429.json").read_text(encoding="utf-8")); rows=first["diversity"]+second["diversity"]
+    ids=["S-429","S-387","S-409","S-469","S-487"]; names=list("ABCDE"); fig,axs=plt.subplots(1,2,figsize=(6.35,2.75),gridspec_kw={"wspace":.52})
+    for ax,field,title,ylabel,ymax in ((axs[0],"final_distance","（a）工作种群平均汉明距离","平均汉明距离 d_H",4.2),(axs[1],"signature_median","（b）严格档案结构覆盖","不重复完整记录签名数",15)):
+        rel=[r for r in rows if field in r]; x=np.arange(5); bg=[next((r[field] for r in rel if r["scene"]==s and r["method"]=="BGA"),np.nan) for s in ids]; mg=[next((r[field] for r in rel if r["scene"]==s and r["method"]=="MGA"),np.nan) for s in ids]
+        ax.scatter(x-.12,bg,s=48,color="#7B8FA4",label="BGA",zorder=3); ax.scatter(x+.12,mg,s=48,color=TEAL,label="MGA",zorder=3)
+        ax.set_xticks(x,names,fontsize=13); ax.set_ylim(0,ymax); ax.set_ylabel(ylabel,fontsize=13); ax.tick_params(axis="y",labelsize=11.5); ax.set_title(title,fontsize=13.5,loc="left",fontweight="bold"); ax.grid(axis="y",color=GRID,lw=.6); ax.spines[["top","right"]].set_visible(False)
+    axs[0].legend(frameon=False,fontsize=11.5,ncol=2,loc="upper left"); fig.tight_layout(pad=.28); save(fig,path)
+
+
+def fig8(path):
+    rows=[("A-BGA\n(n=25)",{"负载损耗":23,"空载损耗":1,"其他":1}),("A-MGA\n(n=24)",{"负载损耗":24}),("B-BGA\n(n=12)",{"空载损耗":6,"阻抗":3,"负载损耗":2,"其他":1}),("B-MGA\n(n=6)",{"负载损耗":5,"空载损耗":1}),("D-BGA\n(n=18)",{"空载损耗":7,"散热器中心距":5,"温升/电流":5,"阻抗":1}),("E-BGA\n(n=29)",{"散热器中心距":10,"温升/电流":11,"负载损耗":5,"空载损耗":1,"其他":2})]
+    cats=["负载损耗","空载损耗","阻抗","散热器中心距","温升/电流","其他"]; cols={"负载损耗":BLUE,"空载损耗":TEAL,"阻抗":ORANGE,"散热器中心距":"#7C3AED","温升/电流":"#C94343","其他":"#6B7280"}
+    fig,ax=plt.subplots(figsize=(6.35,2.45)); y=np.arange(len(rows)); left=np.zeros(len(rows))
+    for cat in cats:
+        vals=np.array([r[1].get(cat,0)/sum(r[1].values())*100 for r in rows]); ax.barh(y,vals,left=left,height=.6,color=cols[cat],label=cat); left+=vals
+    ylabels=["A·BGA (25)","A·MGA (24)","B·BGA (12)","B·MGA (6)","D·BGA (18)","E·BGA (29)"]
+    ax.set_yticks(y,ylabels,fontsize=14); ax.invert_yaxis(); ax.set_xlim(0,100); ax.set_xlabel("失败运行中主导约束构成（%）",fontsize=13); ax.tick_params(axis="x",labelsize=11.5); ax.grid(axis="x",color=GRID,lw=.6); ax.spines[["top","right"]].set_visible(False)
+    ax.legend(frameon=False,fontsize=12.4,ncol=3,loc="lower center",bbox_to_anchor=(.5,1.02),columnspacing=.8,handlelength=1.25)
+    fig.tight_layout(pad=.18); save(fig,path)
+
+
+def figA1(path):
+    fig,ax=plt.subplots(figsize=(6.25,2.05)); ax.set_xlim(0,12); ax.set_ylim(0,4); ax.axis("off")
+    box(ax,.25,1.35,2.45,1.35,"13 条记录","可逐字段重放",PALE_BLUE,BLUE,12,8.5)
+    box(ax,3.25,1.35,2.45,1.35,"32 字段 / 条","冻结输入可比",PALE_BLUE,BLUE,12,8.5)
+    box(ax,6.25,1.35,2.45,1.35,"416 / 416","Java—Python 一致",PALE_TEAL,TEAL,12,8.5)
+    box(ax,9.25,1.35,2.45,1.35,"0 项","字段不一致",PALE_TEAL,TEAL,12,8.5)
+    arrow(ax,(2.7,2.02),(3.25,2.02)); arrow(ax,(5.7,2.02),(6.25,2.02)); arrow(ax,(8.7,2.02),(9.25,2.02))
+    ax.text(6,.48,"冻结版本软件输出一致性门控；不替代实测或生产定型验证。",ha="center",fontsize=11,color="#52677C")
+    fig.tight_layout(pad=.12); save(fig,path)
+
+
+def replace_blob(doc,index,path):
+    p=doc.paragraphs[index]; ids=p._p.xpath('.//a:blip/@r:embed')
+    if len(ids)!=1: raise RuntimeError((index,ids))
+    doc.part.related_parts[ids[0]]._blob=path.read_bytes()
+
+
+def clear(p):
+    for child in list(p._p):
+        if child.tag != qn("w:pPr"): p._p.remove(child)
+
+
+def set_run(run,size=9):
+    run.font.size=Pt(size); run.font.name="Times New Roman"; rpr=run._element.get_or_add_rPr(); fonts=rpr.rFonts
+    if fonts is None: fonts=OxmlElement("w:rFonts"); rpr.insert(0,fonts)
+    for attr,val in (("ascii","Times New Roman"),("hAnsi","Times New Roman"),("eastAsia","宋体"),("cs","Times New Roman")): fonts.set(qn(f"w:{attr}"),val)
+
+
+def replace_text(p,value,size=9):
+    clear(p); r=p.add_run(value); set_run(r,size)
+
+
+def main():
+    ASSET.mkdir(parents=True,exist_ok=True)
+    renderers={23:("图1_工程优化闭环.png",fig1),28:("图2_完整记录整体继承.png",fig2),42:("图3_双档案流程.png",fig3),67:("图4_主比较结果.png",fig4),71:("图5_HL成本变化率.png",fig5),77:("图6_策略变体点图.png",fig6),79:("图7_多样性点图.png",fig7),84:("图8_失败约束构成.png",fig8),103:("图A1_计算链一致性.png",figA1)}
+    paths={}
+    for index,(name,fn) in renderers.items():
+        paths[index]=ASSET/name; fn(paths[index])
+    doc=Document(SOURCE)
+    for index,path in paths.items(): replace_blob(doc,index,path)
+    replace_text(doc.paragraphs[4],"针对三相油浸式变压器离散设计中材料目录离散、结构参数条件依赖及工程精算代价高的问题，提出一种目录约束双档案遗传优化方法。该方法以完整目录记录为原子决策单元，并通过合法化函数派生层数、油道和冷却关联变量，避免遗传操作产生无法由业务目录还原的虚拟规格。严格可行档案仅保存满足全部硬约束的候选，近可行档案保留可计算但存在约束超限的边界候选；覆盖初始化、耦合交叉和运行内已评价候选池注入构成默认增强搜索策略，诊断反馈局部变异作为可选扩展策略单独评估。主比较评价MGA默认增强策略整体，不将任何差异单独归因于双档案。基于五类预定义工程场景、每个场景30个配对随机种子的测试结果表明：相较目录约束基础遗传算法（BGA），在大容量长圆、散热器工况甲和工况乙中，MGA默认增强策略与BGA的严格可行发现率差异经双侧McNemar精确检验，并在5场景检验族内采用Holm校正后，p值分别为3.05e-5和1.86e-8；在双方共同严格成功的配对中，中容量长圆、波纹场景和大容量长圆、散热器工况甲的最低严格成本Hodges-Lehmann变化率分别为-0.83%和-7.02%。中小容量长圆、波纹场景的成本差异未达到统计显著。五个主场景中，BGA与MGA的第0代后真实精算调用中位数之比为1.85至4.82。结果支持：在当前冻结目录、价格快照与预算上限下，MGA默认增强策略可提高部分复杂配置的严格可行方案发现率；后续真实精算调用量较低仅为当前停止规则下的观测结果，不能替代首次严格解发现效率的判断。结论不外推为全部产品配置上的统一性能保证。")
+    replace_text(doc.paragraphs[7],"A catalogue-constrained dual-archive genetic optimization method is proposed for three-phase oil-immersed transformer design. Complete catalogue records are atomic decision units, and legalization derives layer, duct, and cooling variables to prevent virtual specifications that cannot be restored from business catalogues. Strict-feasible and near-feasible archives retain hard-constraint-satisfying and computable boundary candidates, respectively. Coverage initialization, coupled crossover, and run-time evaluated-pool injection form the default strategy; diagnostic local mutation is an optional extension. The primary comparison evaluates the overall MGA-default strategy and does not isolate the independent effect of the dual archive. Five predefined engineering scenarios, each with 30 paired seeds, compare it with a catalogue-constrained baseline GA (BGA). In two large-capacity long-oval radiator scenarios, strict-feasible discovery-rate differences were tested by two-sided exact McNemar tests with five-scenario Holm adjustment (p=3.05e-5 and 1.86e-8). For jointly strict-feasible paired runs, Hodges-Lehmann cost-change estimates are -0.83% in the medium-capacity long-oval corrugated-tank scenario and -7.02% in large-capacity long-oval radiator scenario I; the small-to-medium-capacity long-oval corrugated-tank result is not significant. The ratio of median post-initialization engineering evaluations for BGA to MGA ranges from 1.85 to 4.82 across five scenarios. Under frozen catalogue and price snapshots and the same maximum actual-evaluation budget, the results support improved strict-feasible discovery for some of the tested complex configurations. Evaluation counts are descriptive under the stopping rule and do not measure first strict-feasible discovery efficiency; conclusions do not guarantee uniform performance.")
+    replace_text(doc.paragraphs[11],"本文主比较结果来源于正式冻结后的运行轨迹；主实验冻结后独立开展Java与Python一致性核验及泛化边界检查，二者仅用于界定计算链一致性与适用边界，不参与主比较统计。主比较覆盖五类来自实际业务系统的工程配置快照：场景A为50 kVA圆形铁芯、波纹油箱，场景B为100 kVA长圆铁芯、波纹油箱，场景C为300 kVA长圆铁芯、波纹油箱，场景D为2 000 kVA长圆铁芯、散热器油箱工况甲，场景E为2 000 kVA长圆铁芯、散热器油箱工况乙。场景D与场景E的容量和主结构相同，但冻结的页面条件、目录快照与实际搜索规模不同，故作为独立场景分别报告。每个场景在BGA与MGA下采用相同的30个随机种子配对运行。另设一个200 kVA圆形铁芯、波纹油箱边界场景，双方均未得到严格解，仅用于边界检查，不进入主比较和显著性结论。")
+    replace_text(doc.paragraphs[13],doc.paragraphs[13].text.replace("5个真实工程配置","5个实际业务系统冻结配置"))
+    replace_text(doc.paragraphs[58],doc.paragraphs[58].text.replace("真实工程配置快照","实际业务系统冻结配置快照"))
+    replace_text(doc.paragraphs[73],"表6 BGA与MGA严格成功情况及共同成功条件下的成本比较",9)
+    replace_text(doc.paragraphs[93],doc.paragraphs[93].text.replace("当前真实测试支持","当前主比较测试支持"))
+    replace_text(doc.paragraphs[95],doc.paragraphs[95].text.replace("5个真实工程配置","5个实际业务系统冻结配置"))
+    replace_text(doc.paragraphs[101],doc.paragraphs[101].text.replace("在当前可逐位复现的13条三相历史记录范围内，","从当前能够在Java与Python两套冻结计算链中逐字段重放的三相历史记录中选取13条，"))
+    replace_text(doc.paragraphs[105],"附录B 五个实际业务系统配置场景的冻结搜索快照",10.5)
+    replace_text(doc.paragraphs[106],doc.paragraphs[106].text.replace("五个真实主比较场景","五个实际业务系统主比较场景").replace("当前归档尚未建立独立snapshot UUID，以“归档日期+场景+对应SQLite轨迹/JSON汇总文件”共同识别一次冻结运行快照。","当前归档尚未建立独立snapshot UUID，以“归档日期+场景+对应SQLite轨迹/JSON汇总文件”共同识别一次冻结运行快照。企业目录与价格快照不对外公开，本文的可复核性限定为内部冻结归档；外部复现需基于脱敏配置摘要及授权元数据。"))
+    replace_text(doc.paragraphs[85],"图8 未获得严格可行解运行的主导约束构成（描述性统计；分母为各方法未获严格解的运行数，具体计数见表9；场景D/E的MGA无失败运行，未绘制百分比条）",9)
+    doc.save(OUTPUT); print(OUTPUT)
+
+if __name__=="__main__": main()
