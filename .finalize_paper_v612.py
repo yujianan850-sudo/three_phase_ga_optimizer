@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""V6.13：送外审图表重绘与证据边界终校；不修改实验数据。"""
+"""V6.14：送外审图表重绘与证据边界终校；不修改实验数据。"""
 from pathlib import Path
 import json
 
@@ -13,8 +13,8 @@ from docx.shared import Pt
 
 ROOT = Path(r"D:\IdeaProject\faladi\three_phase_ga_optimizer")
 SOURCE = ROOT / "论文" / "目录约束双档案遗传优化三相变压器_版式与引用优化版V6.11-送外审正文对齐终校版.docx"
-OUTPUT = ROOT / "论文" / "目录约束双档案遗传优化三相变压器_版式与引用优化版V6.13-送外审图表与证据边界终校版.docx"
-ASSET = ROOT / "论文" / "图表-送外审终校V6.13"
+OUTPUT = ROOT / "论文" / "目录约束双档案遗传优化三相变压器_版式与引用优化版V6.14-送外审图内注释清理版.docx"
+ASSET = ROOT / "论文" / "图表-送外审终校V6.14"
 DATA = ROOT / "测试归档" / "2026-09-24测试" / "论文真实数据"
 
 INK, BLUE, TEAL, ORANGE, GRID = "#19324D", "#2E5F89", "#167C74", "#BE7A2F", "#D9E3EC"
@@ -103,7 +103,7 @@ def fig5(path):
         ax.text(-12.65,y+.08,name,ha="left",fontsize=16,fontweight="bold",color=INK); ax.text(-12.65,y-.20,f"共同严格成功 n={n}",ha="left",fontsize=12.3,color="#607388")
         ax.text(est+.25,y+.12,lbl,fontsize=14,fontweight="bold",color=INK); ax.text(est+.25,y-.17,pval,fontsize=11.5,color="#536578")
     ax.set_xlim(-13,2); ax.set_ylim(-.5,2.75); ax.set_yticks([]); ax.set_xticks([-12,-9,-6,-3,0]); ax.tick_params(axis="x",labelsize=13)
-    ax.set_xlabel("Hodges–Lehmann 成本变化率（%）",fontsize=15); ax.text(-12.85,2.53,"负值表示 MGA 成本较低；点为 HL 估计，横线为 95% CI。",fontsize=11.5,color="#586B7E")
+    ax.set_xlabel("Hodges–Lehmann 成本变化率（%）",fontsize=15)
     ax.spines[["top","right","left"]].set_visible(False); ax.grid(axis="x",color=GRID,lw=.6); fig.tight_layout(pad=.3); save(fig,path)
 
 
@@ -114,7 +114,6 @@ def fig6(path):
     for name,vals in data.items(): ax.scatter(x,vals,s=60,marker=marks[name],color=colors[name],label=f"场景 {name}",zorder=3)
     ax.set_xticks(x,labels,fontsize=12); ax.set_ylim(-4,112); ax.set_yticks([0,50,100]); ax.set_ylabel("严格可行率（%）",fontsize=14); ax.tick_params(axis="y",labelsize=12)
     ax.grid(axis="y",color=GRID,lw=.65); ax.spines[["top","right"]].set_visible(False); ax.legend(frameon=False,fontsize=12,ncol=3,loc="upper left")
-    ax.text(.01,.03,"点之间不连线：各列为独立预定义策略变体。",transform=ax.transAxes,fontsize=10.4,color="#5B6B7C")
     fig.tight_layout(pad=.28); save(fig,path)
 
 
@@ -147,7 +146,6 @@ def figA1(path):
     box(ax,6.25,1.35,2.45,1.35,"416 / 416","Java—Python 一致",PALE_TEAL,TEAL,12,8.5)
     box(ax,9.25,1.35,2.45,1.35,"0 项","字段不一致",PALE_TEAL,TEAL,12,8.5)
     arrow(ax,(2.7,2.02),(3.25,2.02)); arrow(ax,(5.7,2.02),(6.25,2.02)); arrow(ax,(8.7,2.02),(9.25,2.02))
-    ax.text(6,.48,"冻结版本软件输出一致性门控；不替代实测或生产定型验证。",ha="center",fontsize=11,color="#52677C")
     fig.tight_layout(pad=.12); save(fig,path)
 
 
