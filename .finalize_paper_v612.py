@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""V6.14：送外审图表重绘与证据边界终校；不修改实验数据。"""
+"""V6.15：送外审图表期刊化重绘；不修改实验数据。"""
 from pathlib import Path
 import json
 
@@ -13,8 +13,8 @@ from docx.shared import Pt
 
 ROOT = Path(r"D:\IdeaProject\faladi\three_phase_ga_optimizer")
 SOURCE = ROOT / "论文" / "目录约束双档案遗传优化三相变压器_版式与引用优化版V6.11-送外审正文对齐终校版.docx"
-OUTPUT = ROOT / "论文" / "目录约束双档案遗传优化三相变压器_版式与引用优化版V6.14-送外审图内注释清理版.docx"
-ASSET = ROOT / "论文" / "图表-送外审终校V6.14"
+OUTPUT = ROOT / "论文" / "目录约束双档案遗传优化三相变压器_版式与引用优化版V6.15-送外审期刊图表重绘版.docx"
+ASSET = ROOT / "论文" / "图表-送外审终校V6.15"
 DATA = ROOT / "测试归档" / "2026-09-24测试" / "论文真实数据"
 
 INK, BLUE, TEAL, ORANGE, GRID = "#19324D", "#2E5F89", "#167C74", "#BE7A2F", "#D9E3EC"
@@ -39,43 +39,55 @@ def box(ax, x, y, w, h, title, note="", fill=PALE_BLUE, edge=BLUE, ts=13, ns=10)
     if note: ax.text(x+w/2,y+h*.28,note,ha="center",va="center",fontsize=ns,color="#4D6278")
 
 
+def paper_box(ax, x, y, w, h, text, fs=13):
+    """单色直角框：用于期刊流程示意，避免演示文稿式配色。"""
+    ax.add_patch(FancyBboxPatch((x, y), w, h, boxstyle="square,pad=0.01",
+                                facecolor="white", edgecolor="#3D4C5C", linewidth=1.05))
+    ax.text(x+w/2, y+h/2, text, ha="center", va="center", fontsize=fs,
+            fontweight="normal", color="#1F2933")
+
+
 def fig1(path):
     fig,ax=plt.subplots(figsize=(6.2,2.55)); ax.set_xlim(0,12); ax.set_ylim(0,5); ax.axis("off")
-    box(ax,.25,3.25,2.55,.95,"页面配置 q","",PALE_BLUE,BLUE,16,9.5)
-    box(ax,3.45,3.25,2.55,.95,"冻结目录 D","",PALE_BLUE,BLUE,16,9.5)
-    box(ax,6.65,3.25,2.55,.95,"合法化 Φ","",PALE_TEAL,TEAL,16,9.5)
-    box(ax,9.85,3.25,1.90,.95,"精算 E","",PALE_ORANGE,ORANGE,16,9.5)
-    for x1,x2 in ((2.8,3.45),(6.0,6.65),(9.2,9.85)): arrow(ax,(x1,3.73),(x2,3.73))
-    box(ax,3.25,1.02,2.60,.95,"约束诊断 V","",PALE_ORANGE,ORANGE,16,9.5)
-    box(ax,6.35,1.02,2.60,.95,"双档案","",PALE_TEAL,TEAL,16,9.5)
-    box(ax,9.45,1.02,2.30,.95,"搜索更新","",PALE_BLUE,BLUE,16,9.2)
-    arrow(ax,(10.8,3.25),(10.8,1.97),ORANGE); arrow(ax,(5.85,1.5),(6.35,1.5),TEAL); arrow(ax,(8.95,1.5),(9.45,1.5)); arrow(ax,(9.45,1.02),(8.0,.28),TEAL,rad=.1); arrow(ax,(8.0,.28),(6.65,3.25),TEAL,rad=.18)
-    fig.tight_layout(pad=.15); save(fig,path)
+    c="#3D4C5C"
+    paper_box(ax,.30,3.40,2.45,.68,"页面约束 q\n冻结目录 D",13.5)
+    paper_box(ax,3.55,3.40,2.00,.68,"合法化 Φ",14)
+    paper_box(ax,6.35,3.40,2.00,.68,"工程精算 E",14)
+    paper_box(ax,9.15,3.40,2.20,.68,"约束诊断 V",14)
+    paper_box(ax,6.35,1.30,2.00,.68,"双档案\nA_f / A_n",13.5)
+    paper_box(ax,3.55,1.30,2.00,.68,"搜索更新",14)
+    for a,b in [((2.75,3.74),(3.55,3.74)),((5.55,3.74),(6.35,3.74)),((8.35,3.74),(9.15,3.74)),((10.25,3.40),(10.25,1.98)),((9.15,1.64),(8.35,1.64)),((6.35,1.64),(5.55,1.64)),((4.55,1.98),(4.55,3.40))]:
+        arrow(ax,a,b,c,lw=1.15)
+    fig.tight_layout(pad=.12); save(fig,path)
 
 
 def fig2(path):
     fig,ax=plt.subplots(figsize=(6.2,3.45)); ax.set_xlim(0,12); ax.set_ylim(0,7); ax.axis("off")
-    box(ax,.35,4.5,3.0,1.45,"记录 A\n完整字段","",PALE_BLUE,BLUE,16,10)
-    box(ax,8.65,4.5,3.0,1.45,"记录 B\n完整字段","",PALE_BLUE,BLUE,16,10)
-    box(ax,4.18,4.5,3.65,1.45,"字段拼接\n禁止", "", "#FFF5F4", "#C94343",16,10)
-    ax.text(6,3.58,"不可还原",ha="center",va="center",fontsize=14,fontweight="bold",color="#C94343")
-    arrow(ax,(3.35,5.2),(4.18,5.2),"#C94343"); arrow(ax,(8.65,5.2),(7.83,5.2),"#C94343")
-    box(ax,1.05,.85,3.35,1.42,"整体继承\n记录 A 或 B","",PALE_TEAL,TEAL,16,10)
-    box(ax,4.85,.85,2.15,1.42,"合法化 Φ","",PALE_TEAL,TEAL,15,9.4)
-    box(ax,7.45,.85,3.35,1.42,"工程精算 E\n可还原、可解释","",PALE_TEAL,TEAL,16,10)
-    arrow(ax,(4.4,1.56),(4.85,1.56),TEAL); arrow(ax,(7.0,1.56),(7.45,1.56),TEAL)
+    c="#3D4C5C"
+    paper_box(ax,.55,4.55,2.45,.85,"目录记录 A\n完整字段",15)
+    paper_box(ax,4.30,4.55,3.40,.85,"字段拼接：禁止\n目录不可还原",15)
+    paper_box(ax,9.00,4.55,2.45,.85,"目录记录 B\n完整字段",15)
+    arrow(ax,(3.00,4.98),(4.30,4.98),c,lw=1.1); arrow(ax,(9.00,4.98),(7.70,4.98),c,lw=1.1)
+    paper_box(ax,.95,1.45,3.15,.85,"整体继承记录 A 或 B",15)
+    paper_box(ax,4.45,1.45,2.10,.85,"合法化 Φ",15)
+    paper_box(ax,6.90,1.45,3.15,.85,"工程精算 E",15)
+    arrow(ax,(4.10,1.88),(4.45,1.88),c,lw=1.1); arrow(ax,(6.55,1.88),(6.90,1.88),c,lw=1.1)
     fig.tight_layout(pad=.12); save(fig,path)
 
 
 def fig3(path):
     fig,ax=plt.subplots(figsize=(6.5,3.9)); ax.set_xlim(0,12); ax.set_ylim(0,7); ax.axis("off")
-    box(ax,.35,5.25,3.10,.95,"工程精算候选","",PALE_BLUE,BLUE,16,10)
-    box(ax,4.25,5.25,3.10,.95,"严格档案 A_f\nV=0","",PALE_TEAL,TEAL,15.2,10)
-    box(ax,4.25,3.35,3.10,.95,"近可行档案 A_n\nV>0","",PALE_ORANGE,ORANGE,15.2,10)
-    box(ax,8.25,4.30,3.20,.95,"父代选择","",PALE_BLUE,BLUE,16,9.8)
-    box(ax,8.25,1.85,3.20,.95,"生成候选","",PALE_BLUE,BLUE,16,10)
-    box(ax,4.25,.35,3.10,.90,"更新与保留","",PALE_TEAL,TEAL,16,9.5)
-    arrow(ax,(3.45,5.73),(4.25,5.73)); arrow(ax,(3.45,5.40),(4.25,3.82)); arrow(ax,(7.35,5.73),(8.25,4.78)); arrow(ax,(7.35,3.82),(8.25,4.78),ORANGE,rad=-.12); arrow(ax,(9.85,4.3),(9.85,2.8)); arrow(ax,(8.25,2.31),(7.35,.8),TEAL,rad=.12); arrow(ax,(4.25,.8),(1.9,.8),TEAL); arrow(ax,(1.9,.8),(1.9,5.25),TEAL)
+    c="#3D4C5C"
+    paper_box(ax,.35,4.60,2.35,.76,"工程精算候选",14.5)
+    paper_box(ax,3.55,5.35,2.55,.76,"严格档案 A_f\nV=0",14)
+    paper_box(ax,3.55,3.10,2.55,.76,"近可行档案 A_n\nV>0",14)
+    paper_box(ax,6.95,4.22,2.15,.76,"父代选择",14.5)
+    paper_box(ax,9.70,4.22,1.90,.76,"生成候选",14)
+    arrow(ax,(2.70,5.00),(3.55,5.73),c,lw=1.1); arrow(ax,(2.70,4.88),(3.55,3.48),c,lw=1.1)
+    arrow(ax,(6.10,5.73),(6.95,4.60),c,lw=1.1); arrow(ax,(6.10,3.48),(6.95,4.60),c,lw=1.1)
+    arrow(ax,(9.10,4.60),(9.70,4.60),c,lw=1.1)
+    # 底部闭环不穿越档案分流线；仅表达下一代候选回到工程精算。
+    arrow(ax,(10.65,4.22),(10.65,1.55),c,lw=1.1); arrow(ax,(10.65,1.55),(1.55,1.55),c,lw=1.1); arrow(ax,(1.55,1.55),(1.55,4.60),c,lw=1.1)
     fig.tight_layout(pad=.14); save(fig,path)
 
 
@@ -96,31 +108,31 @@ def fig4(path):
 
 
 def fig5(path):
-    rows=[("场景 B",14,0,-2.83,1.27,"0.00%","Holm p=0.5176"),("场景 C",30,-.83,-1.03,-.83,"-0.83%","Holm p=3.84e-5"),("场景 D",12,-7.02,-11.96,-3.75,"-7.02%","Holm p=9.77e-4")]
-    fig,ax=plt.subplots(figsize=(6.35,3.75)); ax.axvline(0,color="#9BAEC1",lw=1.2); ys=[2,1,0]
-    for y,(name,n,est,lo,hi,lbl,pval) in zip(ys,rows):
-        ax.hlines(y,lo,hi,color=TEAL,lw=3); ax.vlines([lo,hi],y-.07,y+.07,color=TEAL,lw=2); ax.scatter(est,y,s=54,color="#0D5C78",zorder=3)
-        ax.text(-12.65,y+.08,name,ha="left",fontsize=16,fontweight="bold",color=INK); ax.text(-12.65,y-.20,f"共同严格成功 n={n}",ha="left",fontsize=12.3,color="#607388")
-        ax.text(est+.25,y+.12,lbl,fontsize=14,fontweight="bold",color=INK); ax.text(est+.25,y-.17,pval,fontsize=11.5,color="#536578")
-    ax.set_xlim(-13,2); ax.set_ylim(-.5,2.75); ax.set_yticks([]); ax.set_xticks([-12,-9,-6,-3,0]); ax.tick_params(axis="x",labelsize=13)
-    ax.set_xlabel("Hodges–Lehmann 成本变化率（%）",fontsize=15)
-    ax.spines[["top","right","left"]].set_visible(False); ax.grid(axis="x",color=GRID,lw=.6); fig.tight_layout(pad=.3); save(fig,path)
+    rows=[("B  (n=14)",0,-2.83,1.27,"0.00%"),("C  (n=30)",-0.83,-1.03,-0.83,"-0.83%"),("D  (n=12)",-7.02,-11.96,-3.75,"-7.02%")]
+    fig,ax=plt.subplots(figsize=(6.35,3.75)); ax.axvline(0,color="#73808C",lw=1.0); ys=np.array([2,1,0])
+    for y,(name,est,lo,hi,label) in zip(ys,rows):
+        ax.hlines(y,lo,hi,color="#304F69",lw=2.0); ax.vlines([lo,hi],y-.075,y+.075,color="#304F69",lw=1.15)
+        ax.scatter(est,y,s=32,color="#304F69",zorder=3); ax.text(2.35,y,label,va="center",ha="right",fontsize=10.5,color="#263746")
+    ax.set_xlim(-13,2.55); ax.set_ylim(-.45,2.45); ax.set_yticks(ys,labels=[r[0] for r in rows],fontsize=12)
+    ax.set_xticks([-12,-9,-6,-3,0]); ax.tick_params(axis="x",labelsize=11)
+    ax.set_xlabel("Hodges–Lehmann 成本变化率（%）",fontsize=12)
+    ax.spines[["top","right"]].set_visible(False); ax.grid(axis="x",color="#E1E6EB",lw=.65); fig.tight_layout(pad=.32); save(fig,path)
 
 
 def fig6(path):
-    labels=["基础\nBGA","双档案+\n耦合交叉","候选池\n注入","诊断\n探测","去双档案\n（扩展）"]
+    labels=["S0","S1","S2","S3","S4"]
     data={"A":[16.7,20,20,43.3,63.3],"B":[60,63.3,80,96.7,70],"D":[40,100,100,100,100]}; colors={"A":ORANGE,"B":BLUE,"D":TEAL}; marks={"A":"o","B":"s","D":"^"}
     fig,ax=plt.subplots(figsize=(6.35,2.65)); x=np.arange(5)
-    for name,vals in data.items(): ax.scatter(x,vals,s=60,marker=marks[name],color=colors[name],label=f"场景 {name}",zorder=3)
-    ax.set_xticks(x,labels,fontsize=12); ax.set_ylim(-4,112); ax.set_yticks([0,50,100]); ax.set_ylabel("严格可行率（%）",fontsize=14); ax.tick_params(axis="y",labelsize=12)
-    ax.grid(axis="y",color=GRID,lw=.65); ax.spines[["top","right"]].set_visible(False); ax.legend(frameon=False,fontsize=12,ncol=3,loc="upper left")
+    for name,vals in data.items(): ax.scatter(x,vals,s=38,marker=marks[name],color=colors[name],label=f"场景 {name}",zorder=3)
+    ax.set_xticks(x,labels,fontsize=12); ax.set_ylim(-4,112); ax.set_yticks([0,50,100]); ax.set_ylabel("严格可行率（%）",fontsize=12); ax.tick_params(axis="y",labelsize=10.5)
+    ax.grid(axis="y",color=GRID,lw=.65); ax.spines[["top","right"]].set_visible(False); ax.legend(frameon=False,fontsize=9.5,ncol=3,loc="upper left",handletextpad=.25,columnspacing=.8)
     fig.tight_layout(pad=.28); save(fig,path)
 
 
 def fig7(path):
     first=json.loads((DATA/"03_主比较_BGA_MGA"/"diversity_failure_summary.json").read_text(encoding="utf-8")); second=json.loads((DATA/"03_主比较_BGA_MGA"/"diversity_failure_runs_t2rad_runs_t2r429.json").read_text(encoding="utf-8")); rows=first["diversity"]+second["diversity"]
     ids=["S-429","S-387","S-409","S-469","S-487"]; names=list("ABCDE"); fig,axs=plt.subplots(1,2,figsize=(6.35,2.75),gridspec_kw={"wspace":.52})
-    for ax,field,title,ylabel,ymax in ((axs[0],"final_distance","（a）工作种群平均汉明距离","平均汉明距离 d_H",4.2),(axs[1],"signature_median","（b）严格档案结构覆盖","不重复完整记录签名数",15)):
+    for ax,field,title,ylabel,ymax in ((axs[0],"final_distance","（a）工作种群平均汉明距离","平均汉明距离 d_H",4.2),(axs[1],"signature_median","（b）不重复完整记录签名数","不重复完整记录签名数",15)):
         rel=[r for r in rows if field in r]; x=np.arange(5); bg=[next((r[field] for r in rel if r["scene"]==s and r["method"]=="BGA"),np.nan) for s in ids]; mg=[next((r[field] for r in rel if r["scene"]==s and r["method"]=="MGA"),np.nan) for s in ids]
         ax.scatter(x-.12,bg,s=48,color="#7B8FA4",label="BGA",zorder=3); ax.scatter(x+.12,mg,s=48,color=TEAL,label="MGA",zorder=3)
         ax.set_xticks(x,names,fontsize=13); ax.set_ylim(0,ymax); ax.set_ylabel(ylabel,fontsize=13); ax.tick_params(axis="y",labelsize=11.5); ax.set_title(title,fontsize=13.5,loc="left",fontweight="bold"); ax.grid(axis="y",color=GRID,lw=.6); ax.spines[["top","right"]].set_visible(False)
@@ -184,6 +196,8 @@ def main():
     replace_text(doc.paragraphs[13],doc.paragraphs[13].text.replace("5个真实工程配置","5个实际业务系统冻结配置"))
     replace_text(doc.paragraphs[58],doc.paragraphs[58].text.replace("真实工程配置快照","实际业务系统冻结配置快照"))
     replace_text(doc.paragraphs[73],"表6 BGA与MGA严格成功情况及共同成功条件下的成本比较",9)
+    replace_text(doc.paragraphs[78],"图6 独立扩展批次中预定义策略配置的严格可行率（描述性结果；S0：基础BGA；S1：双档案+耦合交叉；S2：S1+候选池注入；S3：S2+诊断探测；S4：S3关闭独立近可行档案。各点为独立策略配置，不表示连续递进关系；仅展示场景A、B、D，场景C为100.0%，场景E扩展为0.0%，完整结果见表8）",9)
+    replace_text(doc.paragraphs[79],"图7 五个主场景的最终工作种群平均汉明距离与严格档案不重复完整记录签名数（描述性统计）",9)
     replace_text(doc.paragraphs[93],doc.paragraphs[93].text.replace("当前真实测试支持","当前主比较测试支持"))
     replace_text(doc.paragraphs[95],doc.paragraphs[95].text.replace("5个真实工程配置","5个实际业务系统冻结配置"))
     replace_text(doc.paragraphs[101],doc.paragraphs[101].text.replace("在当前可逐位复现的13条三相历史记录范围内，","从当前能够在Java与Python两套冻结计算链中逐字段重放的三相历史记录中选取13条，"))
