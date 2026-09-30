@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""V6.15：送外审图表期刊化重绘；不修改实验数据。"""
+"""V6.16：送外审图表期刊化重绘；不修改实验数据。"""
 from pathlib import Path
 import json
 
@@ -13,8 +13,8 @@ from docx.shared import Pt
 
 ROOT = Path(r"D:\IdeaProject\faladi\three_phase_ga_optimizer")
 SOURCE = ROOT / "论文" / "目录约束双档案遗传优化三相变压器_版式与引用优化版V6.11-送外审正文对齐终校版.docx"
-OUTPUT = ROOT / "论文" / "目录约束双档案遗传优化三相变压器_版式与引用优化版V6.15-送外审期刊图表重绘版.docx"
-ASSET = ROOT / "论文" / "图表-送外审终校V6.15"
+OUTPUT = ROOT / "论文" / "目录约束双档案遗传优化三相变压器_版式与引用优化版V6.16-送外审图表可读性修订版.docx"
+ASSET = ROOT / "论文" / "图表-送外审终校V6.16"
 DATA = ROOT / "测试归档" / "2026-09-24测试" / "论文真实数据"
 
 INK, BLUE, TEAL, ORANGE, GRID = "#19324D", "#2E5F89", "#167C74", "#BE7A2F", "#D9E3EC"
@@ -48,46 +48,48 @@ def paper_box(ax, x, y, w, h, text, fs=13):
 
 
 def fig1(path):
-    fig,ax=plt.subplots(figsize=(6.2,2.55)); ax.set_xlim(0,12); ax.set_ylim(0,5); ax.axis("off")
+    # 提高图高并缩短框内文字，避免双栏缩放后文字或箭头贴边。
+    fig,ax=plt.subplots(figsize=(6.2,3.25)); ax.set_xlim(0,12); ax.set_ylim(0,6); ax.axis("off")
     c="#3D4C5C"
-    paper_box(ax,.30,3.40,2.45,.68,"页面约束 q\n冻结目录 D",13.5)
-    paper_box(ax,3.55,3.40,2.00,.68,"合法化 Φ",14)
-    paper_box(ax,6.35,3.40,2.00,.68,"工程精算 E",14)
-    paper_box(ax,9.15,3.40,2.20,.68,"约束诊断 V",14)
-    paper_box(ax,6.35,1.30,2.00,.68,"双档案\nA_f / A_n",13.5)
-    paper_box(ax,3.55,1.30,2.00,.68,"搜索更新",14)
-    for a,b in [((2.75,3.74),(3.55,3.74)),((5.55,3.74),(6.35,3.74)),((8.35,3.74),(9.15,3.74)),((10.25,3.40),(10.25,1.98)),((9.15,1.64),(8.35,1.64)),((6.35,1.64),(5.55,1.64)),((4.55,1.98),(4.55,3.40))]:
+    paper_box(ax,.28,4.45,2.55,.92,"页面约束\n冻结目录",12.6)
+    paper_box(ax,3.55,4.45,1.90,.92,"合法化",13.5)
+    paper_box(ax,6.25,4.45,1.98,.92,"工程精算",13.5)
+    paper_box(ax,9.02,4.45,2.35,.92,"约束诊断",13.5)
+    paper_box(ax,6.25,1.50,1.98,.92,"双档案\nA_f / A_n",12.7)
+    paper_box(ax,3.55,1.50,1.90,.92,"搜索更新",13.5)
+    for a,b in [((2.83,4.91),(3.55,4.91)),((5.45,4.91),(6.25,4.91)),((8.23,4.91),(9.02,4.91)),((10.20,4.45),(10.20,2.42)),((9.02,1.96),(8.23,1.96)),((6.25,1.96),(5.45,1.96)),((4.50,2.42),(4.50,4.45))]:
         arrow(ax,a,b,c,lw=1.15)
     fig.tight_layout(pad=.12); save(fig,path)
 
 
 def fig2(path):
-    fig,ax=plt.subplots(figsize=(6.2,3.45)); ax.set_xlim(0,12); ax.set_ylim(0,7); ax.axis("off")
+    # 只保留论证所需的两类操作，增大高度和字号以保证单栏可读。
+    fig,ax=plt.subplots(figsize=(6.2,4.25)); ax.set_xlim(0,12); ax.set_ylim(0,8); ax.axis("off")
     c="#3D4C5C"
-    paper_box(ax,.55,4.55,2.45,.85,"目录记录 A\n完整字段",15)
-    paper_box(ax,4.30,4.55,3.40,.85,"字段拼接：禁止\n目录不可还原",15)
-    paper_box(ax,9.00,4.55,2.45,.85,"目录记录 B\n完整字段",15)
-    arrow(ax,(3.00,4.98),(4.30,4.98),c,lw=1.1); arrow(ax,(9.00,4.98),(7.70,4.98),c,lw=1.1)
-    paper_box(ax,.95,1.45,3.15,.85,"整体继承记录 A 或 B",15)
-    paper_box(ax,4.45,1.45,2.10,.85,"合法化 Φ",15)
-    paper_box(ax,6.90,1.45,3.15,.85,"工程精算 E",15)
-    arrow(ax,(4.10,1.88),(4.45,1.88),c,lw=1.1); arrow(ax,(6.55,1.88),(6.90,1.88),c,lw=1.1)
+    paper_box(ax,.55,5.55,2.55,1.00,"目录记录 A\n完整字段",16.0)
+    paper_box(ax,4.10,5.55,3.80,1.00,"字段拼接：禁止\n目录不可还原",16.0)
+    paper_box(ax,8.90,5.55,2.55,1.00,"目录记录 B\n完整字段",16.0)
+    arrow(ax,(3.10,6.05),(4.10,6.05),c,lw=1.12); arrow(ax,(8.90,6.05),(7.90,6.05),c,lw=1.12)
+    paper_box(ax,.72,1.65,4.25,1.05,"完整记录整体继承",16.4)
+    paper_box(ax,5.30,1.65,2.10,1.05,"合法化",16.4)
+    paper_box(ax,7.73,1.65,3.55,1.05,"工程精算",16.4)
+    arrow(ax,(4.97,2.18),(5.30,2.18),c,lw=1.12); arrow(ax,(7.40,2.18),(7.73,2.18),c,lw=1.12)
     fig.tight_layout(pad=.12); save(fig,path)
 
 
 def fig3(path):
-    fig,ax=plt.subplots(figsize=(6.5,3.9)); ax.set_xlim(0,12); ax.set_ylim(0,7); ax.axis("off")
+    # 所有框体增高，主箭头严格从框边缘起止，底部闭环独立于档案分流。
+    fig,ax=plt.subplots(figsize=(6.5,4.55)); ax.set_xlim(0,12); ax.set_ylim(0,8); ax.axis("off")
     c="#3D4C5C"
-    paper_box(ax,.35,4.60,2.35,.76,"工程精算候选",14.5)
-    paper_box(ax,3.55,5.35,2.55,.76,"严格档案 A_f\nV=0",14)
-    paper_box(ax,3.55,3.10,2.55,.76,"近可行档案 A_n\nV>0",14)
-    paper_box(ax,6.95,4.22,2.15,.76,"父代选择",14.5)
-    paper_box(ax,9.70,4.22,1.90,.76,"生成候选",14)
-    arrow(ax,(2.70,5.00),(3.55,5.73),c,lw=1.1); arrow(ax,(2.70,4.88),(3.55,3.48),c,lw=1.1)
-    arrow(ax,(6.10,5.73),(6.95,4.60),c,lw=1.1); arrow(ax,(6.10,3.48),(6.95,4.60),c,lw=1.1)
-    arrow(ax,(9.10,4.60),(9.70,4.60),c,lw=1.1)
-    # 底部闭环不穿越档案分流线；仅表达下一代候选回到工程精算。
-    arrow(ax,(10.65,4.22),(10.65,1.55),c,lw=1.1); arrow(ax,(10.65,1.55),(1.55,1.55),c,lw=1.1); arrow(ax,(1.55,1.55),(1.55,4.60),c,lw=1.1)
+    paper_box(ax,.32,5.12,2.50,.95,"工程精算候选",13.0)
+    paper_box(ax,3.55,6.10,2.65,1.00,"严格档案 A_f\nV=0",12.7)
+    paper_box(ax,3.55,3.62,2.65,1.00,"近可行档案 A_n\nV>0",12.7)
+    paper_box(ax,7.02,5.12,2.15,.95,"父代选择",13.0)
+    paper_box(ax,9.90,5.12,1.75,.95,"生成候选",12.5)
+    arrow(ax,(2.82,5.78),(3.55,6.60),c,lw=1.1); arrow(ax,(2.82,5.42),(3.55,4.12),c,lw=1.1)
+    arrow(ax,(6.20,6.60),(7.02,5.78),c,lw=1.1); arrow(ax,(6.20,4.12),(7.02,5.42),c,lw=1.1)
+    arrow(ax,(9.17,5.60),(9.90,5.60),c,lw=1.1)
+    arrow(ax,(10.78,5.12),(10.78,1.48),c,lw=1.1); arrow(ax,(10.78,1.48),(1.55,1.48),c,lw=1.1); arrow(ax,(1.55,1.48),(1.55,5.12),c,lw=1.1)
     fig.tight_layout(pad=.14); save(fig,path)
 
 
@@ -122,11 +124,13 @@ def fig5(path):
 def fig6(path):
     labels=["S0","S1","S2","S3","S4"]
     data={"A":[16.7,20,20,43.3,63.3],"B":[60,63.3,80,96.7,70],"D":[40,100,100,100,100]}; colors={"A":ORANGE,"B":BLUE,"D":TEAL}; marks={"A":"o","B":"s","D":"^"}
-    fig,ax=plt.subplots(figsize=(6.35,2.65)); x=np.arange(5)
+    # 提高图高并把图例置于绘图区上方，避免场景说明压到 S0--S4 数据点。
+    fig,ax=plt.subplots(figsize=(6.35,3.55)); x=np.arange(5)
     for name,vals in data.items(): ax.scatter(x,vals,s=38,marker=marks[name],color=colors[name],label=f"场景 {name}",zorder=3)
     ax.set_xticks(x,labels,fontsize=12); ax.set_ylim(-4,112); ax.set_yticks([0,50,100]); ax.set_ylabel("严格可行率（%）",fontsize=12); ax.tick_params(axis="y",labelsize=10.5)
-    ax.grid(axis="y",color=GRID,lw=.65); ax.spines[["top","right"]].set_visible(False); ax.legend(frameon=False,fontsize=9.5,ncol=3,loc="upper left",handletextpad=.25,columnspacing=.8)
-    fig.tight_layout(pad=.28); save(fig,path)
+    ax.grid(axis="y",color=GRID,lw=.65); ax.spines[["top","right"]].set_visible(False)
+    ax.legend(frameon=False,fontsize=10.0,ncol=3,loc="lower left",bbox_to_anchor=(0,1.03),borderaxespad=0,handletextpad=.32,columnspacing=1.0)
+    fig.subplots_adjust(left=.13,right=.98,bottom=.22,top=.78); save(fig,path)
 
 
 def fig7(path):
