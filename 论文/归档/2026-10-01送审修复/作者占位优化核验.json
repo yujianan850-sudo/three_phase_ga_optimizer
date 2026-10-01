@@ -1,0 +1,26 @@
+{
+  "output": "D:\\IdeaProject\\faladi\\three_phase_ga_optimizer\\论文\\目录约束双档案遗传优化及其在三相油浸式变压器离散设计中的基准测试研究_作者占位优化版.docx",
+  "author_metadata": "explicit illustrative placeholders; replace before submission",
+  "changes": [
+    [
+      "最低严格成本标准化Hodges–Lehmann位移率",
+      "最低严格成本的标准化Hodges–Lehmann位移"
+    ],
+    [
+      "当前主比较测试支持BGA与MGA默认增强策略的主比较",
+      "本研究已完成BGA与MGA默认增强策略的主比较"
+    ],
+    [
+      "独立扩展配置E扩展中全部变体均未获得严格解",
+      "场景E扩展中全部变体均未获得严格解"
+    ],
+    [
+      "五个真实主场景的冻结搜索快照与可复核信息",
+      "五个主比较场景的冻结搜索快照与可复核信息"
+    ]
+  ],
+  "all_14_tables_unchanged": true,
+  "all_images_unchanged": true,
+  "references_unchanged": true,
+  "sha256": "61952e930e70507c8f46a94c41282a826a23640d5c609643d6b962e25b8c6e35"
+}

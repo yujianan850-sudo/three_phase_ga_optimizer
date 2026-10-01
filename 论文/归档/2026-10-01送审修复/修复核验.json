@@ -1,0 +1,18 @@
+{
+  "source": "D:\\IdeaProject\\faladi\\three_phase_ga_optimizer\\论文\\目录约束双档案遗传优化及其在三相油浸式变压器离散设计中的基准测试研究_指标口径修订版.docx",
+  "output": "D:\\IdeaProject\\faladi\\three_phase_ga_optimizer\\论文\\目录约束双档案遗传优化及其在三相油浸式变压器离散设计中的基准测试研究_送审修复版.docx",
+  "tables": 14,
+  "figures": 9,
+  "measured_tables_unchanged": true,
+  "figures_unchanged": true,
+  "archive_hashes": {
+    "runs_t2full.json": "A0F1266914A426EDE73858EDAC908B2131470BB5CEA6C4CE0CBB34399AF85ADB",
+    "runs_t2rad.json": "4D9E7D17C5C615C22D11DAFD1A2BDDD5741BF37C880DABCB53C7994F02DF9273",
+    "runs_t2r429.json": "1030D418E12EA5A76678D59B7C494D3EBD41E50B8882C3F7867413C56025B7A5",
+    "runs_ablate.json": "06D06DF14471F4B674AFBF6BBF2BE26E5D91F30563478FAA6F15404A72BDE4AD",
+    "runs_ablate429.json": "D2408B24E2ECFC421FC1C001DB9287A9470B1524AB53416217A20E89B0C3705E",
+    "runs_ablate469.json": "90B83D76733A453BD41AFD062E73163F14ECB8E0BB4173B7FFC192B37397DEEC",
+    "runs_ablate489.json": "BCD1CAFE7D50715E7ECE0AED2778366C4332F1E083235FB3D3258C4A67D7D8C6"
+  },
+  "author_metadata_pending": true
+}

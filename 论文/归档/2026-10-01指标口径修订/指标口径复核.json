@@ -1,0 +1,187 @@
+{
+  "main_run_count": 300,
+  "available_original_sqlite": 0,
+  "raw_trace_recalculation_performed": false,
+  "algorithm_rerun_performed": false,
+  "metric": "Unnormalized Hamming distance across five stored fields",
+  "fields": [
+    "steel_brand",
+    "core_data_id",
+    "low_voltage_wire_id",
+    "high_voltage_wire_id",
+    "cooling_option"
+  ],
+  "metric_range": [
+    0,
+    5
+  ],
+  "candidate_scope": "Per-generation recorded candidates with calculable and complete true; fixed-step sample up to 120",
+  "endpoint": "Last generation with a distance statistic in all 30 runs of this scene/method; not each run final population",
+  "signature_scope": "Last generation_population stage strict archive in historical extractor; not final refinement snapshot",
+  "panels": [
+    {
+      "scene": "A",
+      "scene_id": "S-429",
+      "method": "BGA",
+      "distance_median": 2.2814512535219365,
+      "common_last_generation": 8,
+      "signature_median": 0.0,
+      "signature_min": 0,
+      "signature_max": 19
+    },
+    {
+      "scene": "A",
+      "scene_id": "S-429",
+      "method": "MGA",
+      "distance_median": 1.7561667946748591,
+      "common_last_generation": 9,
+      "signature_median": 0.0,
+      "signature_min": 0,
+      "signature_max": 19
+    },
+    {
+      "scene": "B",
+      "scene_id": "S-387",
+      "method": "BGA",
+      "distance_median": 1.653846175641407,
+      "common_last_generation": 8,
+      "signature_median": 6.0,
+      "signature_min": 0,
+      "signature_max": 13
+    },
+    {
+      "scene": "B",
+      "scene_id": "S-387",
+      "method": "MGA",
+      "distance_median": 1.2839292179134179,
+      "common_last_generation": 11,
+      "signature_median": 7.0,
+      "signature_min": 0,
+      "signature_max": 13
+    },
+    {
+      "scene": "C",
+      "scene_id": "S-409",
+      "method": "BGA",
+      "distance_median": 4.142857142857142,
+      "common_last_generation": 9,
+      "signature_median": 7.0,
+      "signature_min": 5,
+      "signature_max": 11
+    },
+    {
+      "scene": "C",
+      "scene_id": "S-409",
+      "method": "MGA",
+      "distance_median": 1.3993464832443079,
+      "common_last_generation": 12,
+      "signature_median": 5.0,
+      "signature_min": 5,
+      "signature_max": 10
+    },
+    {
+      "scene": "D",
+      "scene_id": "S-469",
+      "method": "BGA",
+      "distance_median": 4.039063794531897,
+      "common_last_generation": 4,
+      "signature_median": 0.0,
+      "signature_min": 0,
+      "signature_max": 9
+    },
+    {
+      "scene": "D",
+      "scene_id": "S-469",
+      "method": "MGA",
+      "distance_median": 1.651470588235294,
+      "common_last_generation": 11,
+      "signature_median": 13.0,
+      "signature_min": 11,
+      "signature_max": 23
+    },
+    {
+      "scene": "E",
+      "scene_id": "S-487",
+      "method": "BGA",
+      "distance_median": 4.101190476190476,
+      "common_last_generation": 5,
+      "signature_median": 0.0,
+      "signature_min": 0,
+      "signature_max": 1
+    },
+    {
+      "scene": "E",
+      "scene_id": "S-487",
+      "method": "MGA",
+      "distance_median": 1.7002801120448179,
+      "common_last_generation": 12,
+      "signature_median": 5.0,
+      "signature_min": 1,
+      "signature_max": 7
+    }
+  ],
+  "main_statistics": [
+    {
+      "scene": "A",
+      "bga_success": 5,
+      "mga_success": 6,
+      "common_success": 2,
+      "bga_common_cost_median": 10652.375,
+      "mga_common_cost_median": 10750.0
+    },
+    {
+      "scene": "B",
+      "bga_success": 18,
+      "mga_success": 24,
+      "common_success": 14,
+      "bga_common_cost_median": 6055.5,
+      "mga_common_cost_median": 6055.5
+    },
+    {
+      "scene": "C",
+      "bga_success": 30,
+      "mga_success": 30,
+      "common_success": 30,
+      "bga_common_cost_median": 25393.25,
+      "mga_common_cost_median": 25181.25
+    },
+    {
+      "scene": "D",
+      "bga_success": 12,
+      "mga_success": 30,
+      "common_success": 12,
+      "bga_common_cost_median": 77167.25,
+      "mga_common_cost_median": 72133.5
+    },
+    {
+      "scene": "E",
+      "bga_success": 1,
+      "mga_success": 30,
+      "common_success": 1,
+      "bga_common_cost_median": 118405.0,
+      "mga_common_cost_median": 117622.5
+    }
+  ],
+  "sources": [
+    {
+      "path": "测试归档\\2026-09-24测试\\论文真实数据\\02_场景筛选与预算预试验\\runs_t2full.json",
+      "sha256": "a0f1266914a426ede73858edac908b2131470bb5cea6c4ce0cbb34399af85adb"
+    },
+    {
+      "path": "测试归档\\2026-09-24测试\\论文真实数据\\02_场景筛选与预算预试验\\runs_t2rad.json",
+      "sha256": "4d9e7d17c5c615c22d11dafd1a2bddd5741bf37c880dabcb53c7994f02df9273"
+    },
+    {
+      "path": "测试归档\\2026-09-24测试\\论文真实数据\\02_场景筛选与预算预试验\\runs_t2r429.json",
+      "sha256": "1030d418e12ea5a76678d59b7c494d3ebd41e50b8882c3f7867413c56025b7a5"
+    },
+    {
+      "path": "测试归档\\2026-09-24测试\\论文真实数据\\03_主比较_BGA_MGA\\diversity_failure_summary.json",
+      "sha256": "6f4c193ff575b6af58f1ccb0fa652fc36961e221f6db5facd6c541fed308dfbd"
+    },
+    {
+      "path": "测试归档\\2026-09-24测试\\论文真实数据\\03_主比较_BGA_MGA\\diversity_failure_runs_t2rad_runs_t2r429.json",
+      "sha256": "fd1b60471186fac328e05db57d1647186ad80953b99d84899488a4cbbaf8f1a8"
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "tables": 14,
+  "images": 9,
+  "references": 17,
+  "reference_round_trip": true,
+  "main_result_tables_unchanged": true,
+  "table_font_pt": 7.5,
+  "figure_numbers": "1-8, A1",
+  "table_numbers": "1-9, A1, B1, C1",
+  "native_math_count": 109,
+  "author_metadata_pending": true,
+  "docx_sha256": "b4aaf213e2a018bef8ebac808c3751628667f7131c6d4707ab1073e020888254"
+}
