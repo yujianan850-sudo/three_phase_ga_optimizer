@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="500" viewBox="0 0 900 500">
+  <style>
+    .title{font:700 52px 'Microsoft YaHei','Noto Sans CJK SC',sans-serif;fill:#15263A}
+    .body{font:40px 'Microsoft YaHei','Noto Sans CJK SC',sans-serif;fill:#31445A}
+    .small{font:25px 'Microsoft YaHei','Noto Sans CJK SC',sans-serif;fill:#5C6E80}
+    .ok{font:700 48px 'Microsoft YaHei','Noto Sans CJK SC',sans-serif;fill:#0F766E}
+    .bad{font:700 46px 'Microsoft YaHei','Noto Sans CJK SC',sans-serif;fill:#B42318}
+  </style>
+  <rect width="900" height="500" fill="#FFFFFF"/>
+  <!-- 图题置于正文图注，图内只保留必要的可读标签。 -->
+  
+  <rect x="45" y="35" width="250" height="150" rx="12" fill="#F5F9FD" stroke="#5B7C99" stroke-width="2"/>
+  <text x="170" y="68" class="title" text-anchor="middle">记录 A</text>
+  <text x="170" y="99" class="body" text-anchor="middle">规格·绝缘</text><text x="170" y="149" class="body" text-anchor="middle">价格</text>
+  
+  <rect x="605" y="35" width="250" height="150" rx="12" fill="#F5F9FD" stroke="#5B7C99" stroke-width="2"/>
+  <text x="730" y="68" class="title" text-anchor="middle">记录 B</text>
+  <text x="730" y="99" class="body" text-anchor="middle">规格·绝缘</text><text x="730" y="149" class="body" text-anchor="middle">价格</text>
+  <path d="M295 110 H340" stroke="#B42318" stroke-width="5" marker-end="url(#arrowRed)"/>
+  <path d="M605 110 H560" stroke="#B42318" stroke-width="5" marker-end="url(#arrowRed)"/>
+  <rect x="320" y="48" width="260" height="125" rx="12" fill="#FFF6F4" stroke="#C24138" stroke-width="3" stroke-dasharray="9 6"/>
+  <text x="450" y="105" class="bad" text-anchor="middle">拼接 ×</text>
+  <text x="450" y="155" class="body" text-anchor="middle">A宽 + B厚</text>
+  <path d="M450 185 V260" stroke="#0F766E" stroke-width="5" marker-end="url(#arrowGreen)"/>
+  <rect x="70" y="275" width="760" height="125" rx="14" fill="#F0FDFA" stroke="#0F766E" stroke-width="3"/>
+  <text x="450" y="335" class="ok" text-anchor="middle">整体继承  ✓</text>
+  <text x="450" y="385" class="body" text-anchor="middle">A / B  →  Φ  →  E</text>
+  <text x="450" y="465" class="small" text-anchor="middle">图示仅说明编码原则：整条目录记录不可拆分。</text>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#6B7A8B"/></marker>
+    <marker id="arrowRed" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#B42318"/></marker>
+    <marker id="arrowGreen" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#0F766E"/></marker>
+  </defs>
+</svg>
