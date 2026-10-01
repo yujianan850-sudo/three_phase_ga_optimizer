@@ -133,9 +133,9 @@ def apply_experiment_strategy(settings: GASettings, strategy: str | None) -> GAS
                        injection_mode="empirical_preferred", guided_mutation_mode="single_primary",
                        guided_mutation_rate=0.65)
     if strategy == "mga_single_archive":
-        # 论文表 6 的「MGA-单档案」对照：保留本文 MGA 的全部算子
-        # （耦合交叉 + 经验有效域注入 + 诊断反馈），只关闭独立近可行档案。
-        # 它与 baseline 的区别正是可归因于"双档案"这一模块。
+        # 独立诊断探测扩展批次的去双档案对照：保留耦合交叉、
+        # 运行内已评价候选池注入与诊断探测，只关闭独立近可行档案。
+        # 是否存在双档案的独立效果必须由同批配对统计判断，不能由此处的配置差异直接断言。
         return replace(settings, coupled_electromagnetic_crossover_rate=0.75,
                        injection_mode="empirical_preferred", guided_mutation_mode="single_primary",
                        guided_mutation_rate=0.65, use_near_archive=False)

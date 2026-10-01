@@ -205,7 +205,7 @@ def _parse_seed_list(raw: str) -> list[int]:
 
 
 def _parse_strategy_list(raw: str) -> list[str]:
-    valid = {"baseline", "coupled", "empirical_injection", "guided_mutation"}
+    valid = {"baseline", "coupled", "empirical_injection", "guided_mutation", "mga_single_archive"}
     strategies = [part.strip() for part in raw.split(",") if part.strip()]
     unknown = set(strategies) - valid
     if unknown:
@@ -357,7 +357,7 @@ def build_parser() -> argparse.ArgumentParser:
     ablation.add_argument("--evolution-evaluation-budget", type=int, default=None,
                           help="初代覆盖之后的演化阶段精算调用硬上限；与 --evaluation-budget 至少填一个，推荐正式消融只填此项")
     ablation.add_argument("--strategies", default="baseline,coupled,empirical_injection,guided_mutation",
-                           help="逗号分隔：baseline,coupled,empirical_injection,guided_mutation")
+                           help="逗号分隔：baseline,coupled,empirical_injection,guided_mutation,mga_single_archive")
     ablation.add_argument("--batch-name", default=None, help="输出文件前缀；默认由配置 ID 与种子范围生成")
     ablation.add_argument("--generations", type=int, default=20)
     ablation.add_argument("--history-ratio", type=float, default=None, help="覆盖 optimizer.yml 的历史种子比例")
