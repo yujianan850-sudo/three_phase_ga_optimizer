@@ -1,0 +1,409 @@
+{
+  "primary_records": 300,
+  "duplicate_primary_keys": 0,
+  "primary_error_records": 0,
+  "source_sha256": {
+    "测试归档\\2026-09-24测试\\论文真实数据\\02_场景筛选与预算预试验\\runs_t2full.json": "a0f1266914a426ede73858edac908b2131470bb5cea6c4ce0cbb34399af85adb",
+    "测试归档\\2026-09-24测试\\论文真实数据\\02_场景筛选与预算预试验\\runs_t2rad.json": "4d9e7d17c5c615c22d11dafd1a2bddd5741bf37c880dabcb53c7994f02df9273",
+    "测试归档\\2026-09-24测试\\论文真实数据\\02_场景筛选与预算预试验\\runs_t2r429.json": "1030d418e12ea5a76678d59b7c494d3ebd41e50b8882c3f7867413c56025b7a5"
+  },
+  "trace_status": {
+    "zero_bytes": 300
+  },
+  "numpy_version": "2.3.5",
+  "scope": "Success counts, exact McNemar/Holm and 20000-resample HL reproduced; Wilcoxon not rerun (SciPy unavailable).",
+  "results": [
+    {
+      "scene": "S-429",
+      "seeds": [
+        20260908,
+        20260909,
+        20260910,
+        20260911,
+        20260912,
+        20260913,
+        20260914,
+        20260915,
+        20260916,
+        20260917,
+        20260918,
+        20260919,
+        20260920,
+        20260921,
+        20260922,
+        20260923,
+        20260924,
+        20260925,
+        20260926,
+        20260927,
+        20260928,
+        20260929,
+        20260930,
+        20260931,
+        20260932,
+        20260933,
+        20260934,
+        20260935,
+        20260936,
+        20260937
+      ],
+      "b_c": [
+        3,
+        4
+      ],
+      "mcnemar_raw": 1.0,
+      "methods": {
+        "BGA": {
+          "success": 5,
+          "all_success_cost_min_q1_median_q3_max": [
+            10554.75,
+            10554.75,
+            10750.0,
+            10750.0,
+            11264.75
+          ],
+          "stop_reason_counts": {
+            "stagnation": 28,
+            "max_generations": 2
+          },
+          "median_evolution_calls": 2754.5,
+          "median_wall_seconds": 10.075
+        },
+        "MGA": {
+          "success": 6,
+          "all_success_cost_min_q1_median_q3_max": [
+            10554.75,
+            10603.5625,
+            10750.0,
+            10750.0,
+            11595.75
+          ],
+          "stop_reason_counts": {
+            "stagnation": 27,
+            "max_generations": 3
+          },
+          "median_evolution_calls": 663.0,
+          "median_wall_seconds": 8.395
+        }
+      },
+      "common_success_n": 2,
+      "mcnemar_holm": 1.0
+    },
+    {
+      "scene": "S-387",
+      "seeds": [
+        20260908,
+        20260909,
+        20260910,
+        20260911,
+        20260912,
+        20260913,
+        20260914,
+        20260915,
+        20260916,
+        20260917,
+        20260918,
+        20260919,
+        20260920,
+        20260921,
+        20260922,
+        20260923,
+        20260924,
+        20260925,
+        20260926,
+        20260927,
+        20260928,
+        20260929,
+        20260930,
+        20260931,
+        20260932,
+        20260933,
+        20260934,
+        20260935,
+        20260936,
+        20260937
+      ],
+      "b_c": [
+        4,
+        10
+      ],
+      "mcnemar_raw": 0.1795654296875,
+      "methods": {
+        "BGA": {
+          "success": 18,
+          "all_success_cost_min_q1_median_q3_max": [
+            6055.5,
+            6055.5,
+            6055.5,
+            6351.0625,
+            6398.25
+          ],
+          "stop_reason_counts": {
+            "stagnation": 21,
+            "evolution_evaluation_budget_hard_stop": 9
+          },
+          "median_evolution_calls": 7066.5,
+          "median_wall_seconds": 28.97
+        },
+        "MGA": {
+          "success": 24,
+          "all_success_cost_min_q1_median_q3_max": [
+            6055.5,
+            6055.5,
+            6055.5,
+            6055.5,
+            6398.25
+          ],
+          "stop_reason_counts": {
+            "stagnation": 29,
+            "max_generations": 1
+          },
+          "median_evolution_calls": 2220.5,
+          "median_wall_seconds": 20.795
+        }
+      },
+      "common_success_n": 14,
+      "HL_CI_verified_pct": [
+        0.0,
+        -2.830071835521427,
+        1.2715712988192551
+      ],
+      "mcnemar_holm": 0.5386962890625
+    },
+    {
+      "scene": "S-409",
+      "seeds": [
+        20260908,
+        20260909,
+        20260910,
+        20260911,
+        20260912,
+        20260913,
+        20260914,
+        20260915,
+        20260916,
+        20260917,
+        20260918,
+        20260919,
+        20260920,
+        20260921,
+        20260922,
+        20260923,
+        20260924,
+        20260925,
+        20260926,
+        20260927,
+        20260928,
+        20260929,
+        20260930,
+        20260931,
+        20260932,
+        20260933,
+        20260934,
+        20260935,
+        20260936,
+        20260937
+      ],
+      "b_c": [
+        0,
+        0
+      ],
+      "mcnemar_raw": 1.0,
+      "methods": {
+        "BGA": {
+          "success": 30,
+          "all_success_cost_min_q1_median_q3_max": [
+            24796.25,
+            25393.25,
+            25393.25,
+            25393.25,
+            25491.5
+          ],
+          "stop_reason_counts": {
+            "evolution_evaluation_budget_hard_stop": 30
+          },
+          "median_evolution_calls": 10000.0,
+          "median_wall_seconds": 54.864999999999995
+        },
+        "MGA": {
+          "success": 30,
+          "all_success_cost_min_q1_median_q3_max": [
+            24423.0,
+            25181.25,
+            25181.25,
+            25181.25,
+            25181.25
+          ],
+          "stop_reason_counts": {
+            "stagnation": 27,
+            "max_generations": 3
+          },
+          "median_evolution_calls": 2074.0,
+          "median_wall_seconds": 48.905
+        }
+      },
+      "common_success_n": 30,
+      "HL_CI_verified_pct": [
+        -0.834867533694978,
+        -1.028324456302364,
+        -0.834867533694978
+      ],
+      "mcnemar_holm": 1.0
+    },
+    {
+      "scene": "S-469",
+      "seeds": [
+        20260908,
+        20260909,
+        20260910,
+        20260911,
+        20260912,
+        20260913,
+        20260914,
+        20260915,
+        20260916,
+        20260917,
+        20260918,
+        20260919,
+        20260920,
+        20260921,
+        20260922,
+        20260923,
+        20260924,
+        20260925,
+        20260926,
+        20260927,
+        20260928,
+        20260929,
+        20260930,
+        20260931,
+        20260932,
+        20260933,
+        20260934,
+        20260935,
+        20260936,
+        20260937
+      ],
+      "b_c": [
+        0,
+        18
+      ],
+      "mcnemar_raw": 7.62939453125e-06,
+      "methods": {
+        "BGA": {
+          "success": 12,
+          "all_success_cost_min_q1_median_q3_max": [
+            72386.0,
+            74837.875,
+            77167.25,
+            81041.625,
+            90021.0
+          ],
+          "stop_reason_counts": {
+            "evolution_evaluation_budget_hard_stop": 30
+          },
+          "median_evolution_calls": 8000.0,
+          "median_wall_seconds": 51.44
+        },
+        "MGA": {
+          "success": 30,
+          "all_success_cost_min_q1_median_q3_max": [
+            72131.0,
+            72131.0,
+            72131.0,
+            72253.5,
+            72756.0
+          ],
+          "stop_reason_counts": {
+            "max_generations": 8,
+            "stagnation": 22
+          },
+          "median_evolution_calls": 3580.5,
+          "median_wall_seconds": 67.74
+        }
+      },
+      "common_success_n": 12,
+      "HL_CI_verified_pct": [
+        -7.023705004389815,
+        -11.957792975647052,
+        -3.7451120779864513
+      ],
+      "mcnemar_holm": 3.0517578125e-05
+    },
+    {
+      "scene": "S-487",
+      "seeds": [
+        20260908,
+        20260909,
+        20260910,
+        20260911,
+        20260912,
+        20260913,
+        20260914,
+        20260915,
+        20260916,
+        20260917,
+        20260918,
+        20260919,
+        20260920,
+        20260921,
+        20260922,
+        20260923,
+        20260924,
+        20260925,
+        20260926,
+        20260927,
+        20260928,
+        20260929,
+        20260930,
+        20260931,
+        20260932,
+        20260933,
+        20260934,
+        20260935,
+        20260936,
+        20260937
+      ],
+      "b_c": [
+        0,
+        29
+      ],
+      "mcnemar_raw": 3.725290298461914e-09,
+      "methods": {
+        "BGA": {
+          "success": 1,
+          "all_success_cost_min_q1_median_q3_max": [
+            118405.0,
+            118405.0,
+            118405.0,
+            118405.0,
+            118405.0
+          ],
+          "stop_reason_counts": {
+            "evolution_evaluation_budget_hard_stop": 30
+          },
+          "median_evolution_calls": 8000.0,
+          "median_wall_seconds": 50.525
+        },
+        "MGA": {
+          "success": 30,
+          "all_success_cost_min_q1_median_q3_max": [
+            116012.5,
+            116012.5,
+            116882.5,
+            117543.75,
+            125727.5
+          ],
+          "stop_reason_counts": {
+            "stagnation": 18,
+            "max_generations": 12
+          },
+          "median_evolution_calls": 4314.0,
+          "median_wall_seconds": 74.77
+        }
+      },
+      "common_success_n": 1,
+      "mcnemar_holm": 1.862645149230957e-08
+    }
+  ]
+}
